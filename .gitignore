@@ -9,3 +9,5 @@
 /.psa*
 /.spago
 /tmp/
+/dist
+/.parcel-cache

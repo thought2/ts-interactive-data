@@ -3,62 +3,78 @@ module TS.InteractiveData.DataUI where
 import Prelude
 
 import DTS as DTS
-import Data.Either (Either)
-import InteractiveData (IDDataUI, IDOutMsg, StringMsg, StringState, ViewCtx)
+import Data.Either (Either(..))
+import Effect (Effect)
+import InteractiveData (IDDataUI, IDHtml, StringMsg, StringState, WrapMsg, WrapState)
+import InteractiveData as I
+import InteractiveData.Core.Types (Error(..))
 import InteractiveData.DataUI as DUI
-import InteractiveData.Types (class IDHtml)
+import InteractiveData.DataUI.NavigationWrapper (AppMsg, AppState)
+import MVC.Types (UI)
+import React.Basic (JSX)
 import TS.InteractiveData.TsBridge.Class (Tok(..))
+import TsBridge (TypeVar(..))
 import TsBridge as TSB
-import Unsafe.Coerce (unsafeCoerce)
-import VirtualDOM (class Html)
+import VirtualDOM.Impl.ReactBasic (ReactHtml)
 import VirtualDOM.Impl.ReactBasic as R
-import VirtualDOM.Styled (class RegisterStyleMap)
-import VirtualDOM.Transformers.Ctx.Class (class AskCtx, class Ctx)
-import VirtualDOM.Transformers.OutMsg.Class (class OutMsg, class RunOutMsg)
-
-newtype ReactHtml msg = ReactHtml (R.ReactHtml msg)
-
-instance IDHtml ReactHtml
-
-instance Html ReactHtml where
-  elem = unsafeCoerce \_ -> 1
-  elemKeyed = unsafeCoerce \_ -> 1
-  text = unsafeCoerce \_ -> 1
-
-instance Ctx ViewCtx ReactHtml where
-  setCtx = unsafeCoerce \_ -> 1
-
-instance AskCtx ViewCtx ReactHtml where
-  withCtx = unsafeCoerce \_ -> 1
-
-instance OutMsg IDOutMsg ReactHtml where
-  fromOutHtml = unsafeCoerce \_ -> 1
-
-instance RunOutMsg IDOutMsg ReactHtml where
-  runOutMsg = unsafeCoerce \_ -> 1
-
-instance RegisterStyleMap ReactHtml where
-  registerStyleMap = unsafeCoerce \_ -> 1
-
-derive instance Functor ReactHtml
 
 ---
 
-dataUiString_ :: IDDataUI ReactHtml StringMsg StringState String
+dataUiString_ :: IDDataUI (IDHtml ReactHtml) StringMsg StringState String
 dataUiString_ = DUI.dataUiString_
 
-x :: String
-x = ""
+toUI
+  :: forall msg sta a
+   . { initData :: Either Error a
+     , name :: String
+     }
+  -> IDDataUI (IDHtml ReactHtml) msg sta a
+  -> { extract :: AppState (WrapState sta) -> Either Error a
+     , ui :: UI ReactHtml (AppMsg (WrapMsg msg)) (AppState (WrapState sta))
+     }
+toUI = I.toUI
+
+---
+
+x = toUI
+  { initData: Right "hello"
+  , name: "hello"
+  }
+  dataUiString_
+
+uiToReactComponent
+  :: forall msg sta
+   . { onStateChange :: sta -> Effect Unit
+     }
+  -> UI ReactHtml msg sta
+  -> Effect (Record () -> JSX)
+uiToReactComponent = R.uiToReactComponent
+
+mountAtId :: String -> Effect (Record () -> JSX) -> Effect Unit
+mountAtId = R.mountAtId
+
+notYetDefined :: forall a. Unit -> Either Error a
+notYetDefined _ = Left $ ErrNotYetDefined
+
+y = x.ui
+  # R.uiToReactComponent
+      { onStateChange: \_ -> pure unit
+      }
+  # R.mountAtId "root"
 
 ---
 
 moduleName :: String
-moduleName = "InteractiveData.DataUI"
+moduleName = "TS.InteractiveData.DataUI"
 
 tsModules :: Either TSB.AppError (Array DTS.TsModuleFile)
 tsModules =
   TSB.tsModuleFile moduleName
     [ TSB.tsValues Tok
-        { x
+        { toUI: toUI :: _ -> (_ _ (TypeVar "Msg") (TypeVar "Sta") (TypeVar "A")) -> _
+        , dataUiString_
+        , uiToReactComponent: uiToReactComponent :: _ -> (UI _ (TypeVar "Msg") (TypeVar "Sta")) -> _
+        , mountAtId
+        , notYetDefined: notYetDefined :: _ -> _ _ (TypeVar "A")
         }
     ]

@@ -1,6 +1,7 @@
 { name = "ts-interactive-data"
 , dependencies =
   [ "aff-promise"
+  , "data-mvc"
   , "dts"
   , "effect"
   , "either"
@@ -10,6 +11,9 @@
   , "maybe"
   , "nullable"
   , "prelude"
+  , "react-basic"
+  , "record"
+  , "these"
   , "ts-bridge"
   , "tuples"
   , "unsafe-coerce"
