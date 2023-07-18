@@ -34,4 +34,4 @@ ci: check-format build-strict test-strict check-git-clean
 
 gen-ts:
 	spago run --main TS.InteractiveData.TsBridge.Main
-	yarn run prettier --write output/*/index.d.ts
+	yarn run prettier --ignore-path "" --write output/*/index.d.ts

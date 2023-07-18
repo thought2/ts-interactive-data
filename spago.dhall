@@ -8,6 +8,7 @@
   , "integers"
   , "interactive-data"
   , "interactive-data-core"
+  , "labeled-data"
   , "maybe"
   , "nullable"
   , "prelude"

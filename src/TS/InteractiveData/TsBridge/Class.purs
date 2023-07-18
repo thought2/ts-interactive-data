@@ -13,14 +13,14 @@ import Data.Tuple (Tuple)
 import Data.Tuple.Nested ((/\))
 import Data.Variant (Variant)
 import Effect (Effect)
-import InteractiveData (DataPathSegment, DataTree, IDHtml(..), IDOutMsg, Proxy(..), StringMsg, StringState, WrapMsg, WrapState)
+import InteractiveData (DataPathSegment, DataTree, IDHtml, IDOutMsg, IDSurface, Proxy(..), StringMsg, StringState, WrapMsg, WrapState)
 import InteractiveData.Core.Types (DataUI, DataUICtx, DataUiItf, Error)
-import InteractiveData.DataUI.NavigationWrapper (AppState(..), SelfMsg)
+import InteractiveData.DataUI.NavigationWrapper (AppState, SelfMsg)
 import React.Basic (JSX)
+import TsBridge (TypeVar)
 import TsBridge as TSB
 import Type.Proxy (Proxy)
 import VirtualDOM.Impl.ReactBasic (ReactHtml)
-import VirtualDOM.Transformers.Ctx.Trans (CtxT)
 
 class TsBridge (a :: Type) where
   tsBridge :: Proxy a -> TSB.TsBridgeM DTS.TsType
@@ -32,19 +32,21 @@ instance TsBridge a => TSB.TsBridgeBy Tok a where
 
 ---
 
---- todo:
--- get rid of CtxT, create IDSurface newtype
+type VarMsg = (TypeVar "msg")
+type VarSta = (TypeVar "sta")
+type VarA = (TypeVar "a")
+
+---
 
 instance
-  ( TsBridge sta
+  ( TsBridge msg
+  , TsBridge sta
   , TsBridge a
-  , TsBridge msg
-  , TsBridge ctx
   ) =>
   TsBridge
-    (DataUI (CtxT ctx (DataTree (IDHtml ReactHtml))) WrapMsg WrapState msg sta a)
+    (DataUI (IDSurface (IDHtml ReactHtml)) WrapMsg WrapState msg sta a)
   where
-  tsBridge = TSB.tsBridgeNewtype Tok
+  tsBridge _ = TSB.tsBridgeNewtype Tok
     { moduleName: "InteractiveData.Core.Types"
     , typeName: "DataUI"
     , typeArgs:
@@ -53,24 +55,36 @@ instance
         , "a" /\ tsBridge (Proxy :: _ a)
         ]
     }
+    (Proxy :: _ (DataUI (IDSurface (IDHtml ReactHtml)) WrapMsg WrapState VarMsg VarSta VarA))
 
 instance
-  ( TsBridge ctx
-
+  ( TsBridge msg
   ) =>
-  TsBridge (DataUICtx (CtxT ctx (DataTree (IDHtml ReactHtml))) WrapMsg WrapState) where
-  tsBridge _ = pure $ DTS.TsTypeBoolean
+  TsBridge (IDSurface (IDHtml ReactHtml) msg)
+  where
+  tsBridge _ = TSB.tsBridgeNewtype Tok
+    { moduleName: "InteractiveData.Core.Types"
+    , typeName: "IDSurface"
+    , typeArgs:
+        [ "msg" /\ tsBridge (Proxy :: _ msg) ]
+    }
+    (Proxy :: _ (IDSurface (IDHtml ReactHtml) VarMsg))
+
+instance
+  TsBridge (DataUICtx (IDSurface (IDHtml ReactHtml)) WrapMsg WrapState) where
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.Core.Types"
+    , typeName: "DataUICtx"
+    , typeArgs: []
+    }
 
 instance
   ( TsBridge sta
   , TsBridge a
   , TsBridge msg
-  --, TsBridge (ReactHtml msg)
-  , TsBridge ctx
-
   ) =>
-  TsBridge (DataUiItf (CtxT ctx (DataTree (IDHtml ReactHtml))) msg sta a) where
-  tsBridge = TSB.tsBridgeNewtype Tok
+  TsBridge (DataUiItf (IDSurface (IDHtml ReactHtml)) msg sta a) where
+  tsBridge _ = TSB.tsBridgeNewtype Tok
     { moduleName: "InteractiveData.Core.Types"
     , typeName: "DataUiItf"
     , typeArgs:
@@ -79,6 +93,7 @@ instance
         , "a" /\ tsBridge (Proxy :: _ a)
         ]
     }
+    (Proxy :: _ (DataUiItf (IDSurface (IDHtml ReactHtml)) VarMsg VarSta VarA))
 
 instance (TsBridge msg) => TsBridge (ReactHtml msg) where
   tsBridge _ = pure $ DTS.TsTypeTypelevelString "todo:ReactHtml"
@@ -86,51 +101,78 @@ instance (TsBridge msg) => TsBridge (ReactHtml msg) where
 instance (TsBridge msg) => TsBridge (IDHtml ReactHtml msg) where
   tsBridge _ = pure $ DTS.TsTypeTypelevelString "todo:IDHtml ReactHtml"
 
-instance TsBridge Error where
-  tsBridge _ = pure $ DTS.TsTypeTypelevelString "todo:error"
-
-instance (TsBridge msg) => TsBridge (WrapMsg msg) where
-  tsBridge _ = pure $ DTS.TsTypeTypelevelString "todo:WrapMsg"
-
-
-instance (TsBridge msg) => TsBridge (SelfMsg msg) where
-  tsBridge _ = pure $ DTS.TsTypeTypelevelString "todo:SelfMsg"
-
-
-instance  TsBridge JSX where
+instance TsBridge JSX where
   tsBridge _ = pure $ DTS.TsTypeTypelevelString "todo:JSX"
 
+instance TsBridge Error where
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.Core.Types"
+    , typeName: "Error"
+    , typeArgs: []
+    }
+
+instance (TsBridge msg) => TsBridge (WrapMsg msg) where
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.Types"
+    , typeName: "WrapMsg"
+    , typeArgs: [ "msg" /\ tsBridge (Proxy :: _ msg) ]
+    }
+
+instance (TsBridge msg) => TsBridge (SelfMsg msg) where
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.DataUI.NavigationWrapper"
+    , typeName: "SelfMsg"
+    , typeArgs: [ "msg" /\ tsBridge (Proxy :: _ msg) ]
+    }
+
 instance (TsBridge sta) => TsBridge (WrapState sta) where
-  tsBridge _ = pure $ DTS.TsTypeTypelevelString "todo:WrapState"
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.Types"
+    , typeName: "WrapState"
+    , typeArgs: [ "sta" /\ tsBridge (Proxy :: _ sta) ]
+    }
 
 instance (TsBridge sta) => TsBridge (AppState sta) where
-  tsBridge _ = pure $ DTS.TsTypeTypelevelString "todo:AppState"
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.DataUI.NavigationWrapper"
+    , typeName: "AppState"
+    , typeArgs: [ "sta" /\ tsBridge (Proxy :: _ sta) ]
+    }
 
 instance TsBridge StringState where
-  tsBridge _ = pure $ DTS.TsTypeTypelevelString "todo:StringState"
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.DataUI.String"
+    , typeName: "StringState"
+    , typeArgs: []
+    }
 
 instance TsBridge StringMsg where
-  tsBridge _ = pure $ DTS.TsTypeTypelevelString "todo:StringMsg"
-
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.DataUI.String"
+    , typeName: "StringMsg"
+    , typeArgs: []
+    }
 
 instance TsBridge IDOutMsg where
-  tsBridge _ = pure $ DTS.TsTypeTypelevelString "todo:IDOutMsg"
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.Types.DataTree"
+    , typeName: "IDOutMsg"
+    , typeArgs: []
+    }
 
-
-instance TsBridge (CtxT ctx html a) where
-  tsBridge _ = pure $ DTS.TsTypeTypelevelString "todo:CtxT"
-
-instance (TsBridge msg) => TsBridge (DataTree ReactHtml msg) where
-  tsBridge _ = pure $ DTS.TsTypeTypelevelString "todo:DataTree"
+instance (TsBridge msg) => TsBridge (DataTree ((IDHtml ReactHtml)) msg) where
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.Types.DataTree"
+    , typeName: "DataTree"
+    , typeArgs: [ "msg" /\ tsBridge (Proxy :: _ msg) ]
+    }
 
 instance TsBridge DataPathSegment where
-  tsBridge _ = pure $ DTS.TsTypeTypelevelString "todo:DataPathSegment"
-
--- TSB.tsBridgeNewtype Tok {
---   moduleName: "VirtualDOM.Transformers.Ctx.Trans",
---   typeName: "CtxT",
---   typeArgs: []
--- } 
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.Types.DataTree"
+    , typeName: "DataPathSegment"
+    , typeArgs: []
+    }
 
 instance (TsBridge a, TsBridge b) => TsBridge (These a b) where
   tsBridge = TSB.tsBridgeOpaqueType
