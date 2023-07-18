@@ -2,12 +2,6 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import * as ID from "../ts-src";
 import { pipe } from "fp-glue";
-import {
-  DataUI,
-  Error as DataUIError,
-} from "../output/InteractiveData.Core.Types";
-
-import { Either, either } from "../output/Data.Either";
 
 type MyType = string;
 
@@ -20,12 +14,10 @@ const myDataUi2 = ID.dataUiRecord_({
 
 const myDataUi = ID.dataUiString_;
 
-const uiResult = pipe(
+const { ui } = pipe(
   myDataUi,
-  ID.toUI({ initData: ID.notYetDefined(), name: "MyType" })
+  ID.toUI({ name: "MyType", initData: ID.notYetDefined() })
 );
-
-const ui = uiResult.ui;
 
 const MyComponent = pipe(
   ui,
@@ -34,15 +26,13 @@ const MyComponent = pipe(
   })
 )();
 
-const MyComponent2 = MyComponent as any;
-
 const main = () => {
   const container = document.getElementById("root");
 
   if (!container) throw new Error("Root element not found");
 
   const root = createRoot(container);
-  root.render(<MyComponent2 />);
+  root.render(<MyComponent />);
 };
 
 main();

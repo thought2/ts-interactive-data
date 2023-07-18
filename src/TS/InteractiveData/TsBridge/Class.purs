@@ -5,7 +5,7 @@ import Prelude
 import Control.Promise (Promise)
 import DTS as DTS
 import Data.Either (Either)
-import Data.Maybe (Maybe)
+import Data.Maybe (Maybe(..))
 import Data.Nullable (Nullable)
 import Data.Symbol (class IsSymbol)
 import Data.These (These)
@@ -96,13 +96,24 @@ instance
     (Proxy :: _ (DataUiItf (IDSurface (IDHtml ReactHtml)) VarMsg VarSta VarA))
 
 instance (TsBridge msg) => TsBridge (ReactHtml msg) where
-  tsBridge _ = pure $ DTS.TsTypeTypelevelString "todo:ReactHtml"
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "VirtualDOM.Impl.ReactBasic.Html"
+    , typeName: "ReactHtml"
+    , typeArgs: [ "msg" /\ tsBridge (Proxy :: _ msg) ]
+    }
 
 instance (TsBridge msg) => TsBridge (IDHtml ReactHtml msg) where
-  tsBridge _ = pure $ DTS.TsTypeTypelevelString "todo:IDHtml ReactHtml"
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.Impl"
+    , typeName: "IDHtml"
+    , typeArgs: [ "msg" /\ tsBridge (Proxy :: _ msg) ]
+    }
 
 instance TsBridge JSX where
-  tsBridge _ = pure $ DTS.TsTypeTypelevelString "todo:JSX"
+  tsBridge _ = pure $
+    DTS.TsTypeConstructor
+      (DTS.TsQualName (Just (DTS.TsImportPath "react")) (DTS.TsName "ReactNode"))
+      (DTS.TsTypeArgs [])
 
 instance TsBridge Error where
   tsBridge = TSB.tsBridgeOpaqueType
@@ -160,7 +171,7 @@ instance TsBridge IDOutMsg where
     , typeArgs: []
     }
 
-instance (TsBridge msg) => TsBridge (DataTree ((IDHtml ReactHtml)) msg) where
+instance (TsBridge msg) => TsBridge (DataTree (IDHtml ReactHtml) msg) where
   tsBridge = TSB.tsBridgeOpaqueType
     { moduleName: "InteractiveData.Types.DataTree"
     , typeName: "DataTree"
