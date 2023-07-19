@@ -10,8 +10,13 @@ build:
 test-strict:
     spago {{cfg_test}} test --purs-args "--strict {{purs_args}}"
 
-test:
+test: test-purs test-ts
+
+test-purs:
     spago {{cfg_test}} test --purs-args "{{purs_args}}"
+
+test-ts:
+    yarn run mocha --require ts-node/register 'ts-test/**/*.ts'
 
 clean:
     rm -rf .spago output .psa-stash .parcel-cache
@@ -33,5 +38,6 @@ check-git-clean:
 ci: check-format build-strict test-strict check-git-clean
 
 gen-ts:
-	spago run --main TS.InteractiveData.TsBridge.Main
-	yarn run prettier --ignore-path "" --write output/*/index.d.ts
+    spago run --main TS.InteractiveData.TsBridge.Main
+    node scripts/copy-dts.js
+    yarn run prettier --ignore-path "" --write output/*/index.d.ts

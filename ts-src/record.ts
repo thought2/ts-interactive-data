@@ -33,10 +33,10 @@ type Variant<T> = {
 type AnyDataUI = DataUI<any, any, any>;
 type AnyDataUIs = Record<string, AnyDataUI>;
 
-const extract =
+export const extract =
   <DataUis extends AnyDataUIs>(dataUis: DataUis, ctx: DataUICtx) =>
   (state: GetState<DataUis>): Either<DataUIError, GetType<DataUis>> => {
-    const result = {};
+    const result: Record<string, any> = {};
 
     for (const key in dataUis) {
       const dataUi: DataUI<unknown, unknown, unknown> = dataUis[key];

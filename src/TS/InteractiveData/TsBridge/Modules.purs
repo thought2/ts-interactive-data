@@ -6,7 +6,6 @@ import Data.Either as Data.Either
 import Data.Int as Data.Int
 import Data.Nullable as Data.Nullable
 import TS.InteractiveData.DataUI as TS.InteractiveData.DataUI
-import TS.InteractiveData.GenTest as TS.InteractiveData.GenTest
 import TS.InteractiveData.TsBridge.Class (Tok(..))
 import TsBridge as TSB
 
@@ -14,7 +13,6 @@ myTsProgram :: Either TSB.AppError DTS.TsProgram
 myTsProgram =
   TSB.tsProgram
     [ TS.InteractiveData.DataUI.tsModules
-    , TS.InteractiveData.GenTest.tsModules
     , TSB.tsModuleFile "Data.Int"
         [ TSB.tsValues Tok
             { fromNumber: Data.Int.fromNumber

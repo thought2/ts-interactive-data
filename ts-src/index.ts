@@ -1,2 +1,2 @@
 export * from "../output/TS.InteractiveData.DataUI";
-export * from "./record";
+export * from "../output/TS.InteractiveData.GenTest";

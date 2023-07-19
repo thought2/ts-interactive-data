@@ -78,14 +78,14 @@ with dts =
 
 with interactive-data-core =
   { repo = "https://github.com/thought2/purescript-interactive-data-core.git"
-  , version = "7c60b863f9f70cf5466d3bdb9d67d0a6f7eff6d7"
+  , version = "145504546c53bf669425be7ee3f411488ccc9443"
   , dependencies = [ "data-mvc", "effect", "either", "heterogeneous", "identity", "newtype", "prelude", "profunctor", "record", "record-extra", "typelevel-prelude", "variant" ]
   }
 
 
 with interactive-data =
   { repo = "ssh://git@github.com/thought2/purescript-interactive-data.git"
-  , version = "a38726e91d98ba38502943d20c7a0d0fc89f7bcb"
+  , version = "1b934d5c2050071dc49676151fa711d7182b53eb"
   , dependencies = [ "argonaut", "argonaut-generic", "arrays", "convertable-options", "data-mvc", "dodo-printer", "either", "foldable-traversable", "identity", "integers", "interactive-data-core", "labeled-data", "maybe", "newtype", "numbers", "ordered-collections", "partial", "prelude", "record", "routing-duplex", "spec", "strings", "these", "tuples", "type-equality", "typelevel-prelude", "unordered-collections", "unsafe-coerce", "variant", "virtual-dom", "virtual-dom-styled" ]
   }
 
@@ -113,7 +113,7 @@ with purs-virtual-dom-assets =
 
 with ts-interactive-data =
   { repo = "ssh://git@github.com/thought2/ts-interactive-data.git"
-  , version = "5aa28b9e400820938451cb338f7c3545b6746c1e"
-  , dependencies = [ "aff-promise", "data-mvc", "dts", "effect", "either", "integers", "interactive-data", "interactive-data-core", "maybe", "nullable", "prelude", "react-basic", "record", "these", "ts-bridge", "tuples", "unsafe-coerce", "variant", "virtual-dom", "virtual-dom-react-basic", "virtual-dom-styled" ]
+  , version = "0787d2075c6c25afa4a790ca1c0c647a398868f1"
+  , dependencies = [ "aff-promise", "data-mvc", "dts", "effect", "either", "integers", "interactive-data", "interactive-data-core", "labeled-data", "maybe", "nullable", "prelude", "react-basic", "record", "these", "ts-bridge", "tuples", "unsafe-coerce", "variant", "virtual-dom", "virtual-dom-react-basic", "virtual-dom-styled" ]
   }
 
