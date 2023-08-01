@@ -35,6 +35,6 @@ check-git-clean:
 ci: check-format build-strict test-strict check-git-clean
 
 gen-ts:
-    spago run --main TS.InteractiveData.TsBridge.Main
+    spago run --main TsBridge.InteractiveData.Main
     node scripts/copy-dts.js
     yarn run prettier --ignore-path "" --write output/*/index.d.ts
