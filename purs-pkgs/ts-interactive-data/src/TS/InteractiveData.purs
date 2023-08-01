@@ -10,6 +10,9 @@ import DTS as DTS
 
 ---
 
+dataUi :: String
+dataUi = "data-ui-purs"
+
 moduleName :: String
 moduleName = "TS.InteractiveData"
 
@@ -22,6 +25,6 @@ tsModules :: Either TSB.AppError (Array DTS.TsModuleFile)
 tsModules =
   TSB.tsModuleFile moduleName
     [ TSB.tsValues Tok
-        {
+        { dataUi
         }
     ]

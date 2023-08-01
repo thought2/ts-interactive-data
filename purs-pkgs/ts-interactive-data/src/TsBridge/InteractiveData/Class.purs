@@ -15,3 +15,6 @@ data Tok = Tok
 
 instance TsBridge a => TSB.TsBridgeBy Tok a where
   tsBridgeBy _ = tsBridge
+
+instance TsBridge String where
+  tsBridge = TSB.tsBridgeString

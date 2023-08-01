@@ -1,3 +1,4 @@
+export PATH := "node_modules/.bin:" + env_var('PATH')
 purs_args := "--stash --censor-lib --censor-codes=ImplicitQualifiedImport"
 cfg_test := "--config test.dhall"
 
@@ -17,6 +18,19 @@ test-purs:
 
 clean:
     rm -rf .spago output .psa-stash .parcel-cache
+
+dist:
+    rm -rf output
+    just dist_
+
+dist_:
+    rm -rf dist
+    spago build
+    just gen-ts
+    rm -rf dist
+    tsc
+    cp -r output dist/output
+    rm -rf dist/output/*/externs.cbor
 
 ide:
     spago {{cfg_test}} test --purs-args "{{purs_args}} --json-errors"
