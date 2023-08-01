@@ -10,13 +10,10 @@ build:
 test-strict:
     spago {{cfg_test}} test --purs-args "--strict {{purs_args}}"
 
-test: test-purs test-ts
+test: test-purs
 
 test-purs:
     spago {{cfg_test}} test --purs-args "{{purs_args}}"
-
-test-ts:
-    yarn run mocha --require ts-node/register 'ts-test/**/*.ts'
 
 clean:
     rm -rf .spago output .psa-stash .parcel-cache
@@ -25,8 +22,8 @@ ide:
     spago {{cfg_test}} test --purs-args "{{purs_args}} --json-errors"
 
 format:
-    purs-tidy format-in-place 'src/**/*.purs'
-    purs-tidy format-in-place 'test/**/*.purs'
+    purs-tidy format-in-place 'purs-pkgs/*/src/**/*.purs'
+    purs-tidy format-in-place 'purs-pkgs/*/test/**/*.purs'
 
 check-format:
     purs-tidy check 'src/**/*.purs'

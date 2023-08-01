@@ -1,0 +1,20 @@
+package:
+  dependencies:
+    - dts
+    - effect
+    - either
+    - integers
+    - nullable
+    - prelude
+    - ts-bridge
+
+  name: ts-interactive-data
+  test:
+    dependencies:
+      - spec-discovery
+      - aff
+      - spec
+      - strings
+      - effect
+      - prelude
+    main: Test.Main
