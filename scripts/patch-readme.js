@@ -9,7 +9,7 @@ const mkRegex = (name) =>
   new RegExp(`<!-- START ${name} -->[\\s\\S]*<!-- END ${name} -->`, "g");
 
 const mkReplace = (name) => (patch) =>
-  `<!-- START ${name} -->\n${patch}\n<!-- END ${name} -->`;
+  `<!-- START ${name} -->\n${patch.trim()}\n<!-- END ${name} -->`;
 
 export const patchAll = (patchData) => (source_) => {
   let source = source_;
@@ -18,4 +18,3 @@ export const patchAll = (patchData) => (source_) => {
   }
   return source;
 };
-
