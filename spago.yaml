@@ -1,6 +1,31 @@
 workspace:
-  extra_packages: {}
+  extra_packages:
+    interactive-data:
+      git: ssh://git@github.com/thought2/purescript-interactive-data.all.git
+      ref: b8519887d6df19080323e6f4d9991891fe93fcea
+      dependencies:
+        - arrays
+        - bifunctors
+        - chameleon
+        - chameleon-styled
+        - chameleon-transformers
+        - convertable-options
+        - data-mvc
+        - dodo-printer
+        - either
+        - foldable-traversable
+        - identity
+        - maybe
+        - mvc
+        - newtype
+        - ordered-collections
+        - prelude
+        - strings
+        - these
+        - tuples
+        - typelevel-prelude
+
   package_set:
     registry: 31.6.0
-  build_opts:
-    pedantic_packages: true
+  # build_opts:
+  #   # pedantic_packages: true

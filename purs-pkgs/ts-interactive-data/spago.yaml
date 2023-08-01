@@ -1,12 +1,22 @@
 package:
   dependencies:
+    - arrays
+    - chameleon-react-basic
+    - data-mvc
     - dts
     - effect
     - either
     - integers
+    - interactive-data
+    - justifill
+    - literals
+    - maybe
     - nullable
     - prelude
+    - record
     - ts-bridge
+    - tuples
+    - untagged-union
 
   name: ts-interactive-data
   test:
