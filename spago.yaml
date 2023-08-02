@@ -2,7 +2,7 @@ workspace:
   extra_packages:
     interactive-data:
       git: ssh://git@github.com/thought2/purescript-interactive-data.all.git
-      ref: b8519887d6df19080323e6f4d9991891fe93fcea
+      ref: 0de0121967a71e5b25c26a085efdda58ef6c553e
       dependencies:
         - arrays
         - bifunctors
@@ -24,6 +24,46 @@ workspace:
         - these
         - tuples
         - typelevel-prelude
+
+    ts-bridge:
+      git: ssh://git@github.com/thought2/purescript-ts-bridge.git
+      ref: 9dbf7787c5dc4d704064cc5809c0dcaf64b79bf8
+      dependencies:
+        [ "aff"
+        , "aff-promise"
+        , "arrays"
+        , "console"
+        , "dts"
+        , "effect"
+        , "either"
+        , "foldable-traversable"
+        , "foreign-object"
+        , "literals"
+        , "maybe"
+        , "newtype"
+        , "node-buffer"
+        , "node-fs"
+        , "node-fs-aff"
+        , "node-path"
+        , "node-process"
+        , "nullable"
+        , "optparse"
+        , "ordered-collections"
+        , "ordered-set"
+        , "partial"
+        , "prelude"
+        , "record"
+        , "safe-coerce"
+        , "strings"
+        , "transformers"
+        , "tuples"
+        , "typelevel-prelude"
+        , "unsafe-coerce"
+        , "untagged-union"
+        , "variant"
+        , "variant-encodings"
+        ]
+
 
   package_set:
     registry: 31.6.0

@@ -3,20 +3,25 @@ module TsBridge.InteractiveData.Class where
 import Prelude
 
 import Chameleon.Impl.ReactBasic (ReactHtml)
+import Chameleon.Impl.ReactBasic as Chameleon.Impl.ReactBasic
 import DTS as DTS
 import Data.Array.NonEmpty as Data.Array.NonEmpty
 import Data.Either (Either)
 import Data.Maybe (Maybe)
+import Data.Nullable (Nullable)
 import Data.Symbol (class IsSymbol)
+import Data.These (These)
 import Data.Tuple.Nested ((/\))
 import DataMVC.Types as DataMVC.Types
 import InteractiveData (IDSurface)
 import InteractiveData as InteractiveData
+import InteractiveData.App as InteractiveData.App
 import InteractiveData.App.WrapData (WrapMsg, WrapState)
+import InteractiveData.App.WrapData as InteractiveData.App.WrapData
 import InteractiveData.Core as InteractiveData.Core
 import InteractiveData.Run.Types.HtmlT (IDHtmlT)
 import Literals.Null (Null)
-import TsBridge (TsRecord, TypeVar)
+import TsBridge (class TsBridgeBy, TsBridgeM, TsRecord, TypeVar, tsBridgeBy)
 import TsBridge as TSB
 import Type.Proxy (Proxy(..))
 import Untagged.Union (OneOf)
@@ -146,6 +151,17 @@ instance
     (Proxy :: _ (InteractiveData.IDSurface (IDHtmlT ReactHtml) VarMsg))
 
 --------------------------------------------------------------------------------
+--- Chameleon.Impl.ReactBasic
+--------------------------------------------------------------------------------
+
+instance (TsBridge msg) => TsBridge (Chameleon.Impl.ReactBasic.ReactHtml msg) where
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "Chameleon.Impl.ReactBasic"
+    , typeName: "ReactHtml"
+    , typeArgs: [ "msg" /\ tsBridge (Proxy :: _ msg) ]
+    }
+
+--------------------------------------------------------------------------------
 --- InteractiveData.Core
 --------------------------------------------------------------------------------
 
@@ -153,6 +169,49 @@ instance (TsBridge msg) => TsBridge (InteractiveData.Core.DataTree (IDHtmlT Reac
   tsBridge = TSB.tsBridgeOpaqueType
     { moduleName: "InteractiveData.Core"
     , typeName: "DataTree"
+    , typeArgs: [ "msg" /\ tsBridge (Proxy :: _ msg) ]
+    }
+
+instance TsBridge InteractiveData.Core.IDOutMsg where
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.Core"
+    , typeName: "IDOutMsg"
+    , typeArgs: []
+    }
+
+--------------------------------------------------------------------------------
+--- InteractiveData.App.WrapData
+--------------------------------------------------------------------------------
+
+instance (TsBridge sta) => TsBridge (InteractiveData.App.WrapData.WrapState sta) where
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.App.WrapData"
+    , typeName: "WrapState"
+    , typeArgs: [ "sta" /\ tsBridge (Proxy :: _ sta) ]
+    }
+
+instance (TsBridge msg) => TsBridge (InteractiveData.App.WrapData.WrapMsg msg) where
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.App.WrapData"
+    , typeName: "WrapMsg"
+    , typeArgs: [ "msg" /\ tsBridge (Proxy :: _ msg) ]
+    }
+
+--------------------------------------------------------------------------------
+--- InteractiveData.App
+--------------------------------------------------------------------------------
+
+instance (TsBridge sta) => TsBridge (InteractiveData.App.AppState sta) where
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.App"
+    , typeName: "AppState"
+    , typeArgs: [ "sta" /\ tsBridge (Proxy :: _ sta) ]
+    }
+
+instance (TsBridge msg) => TsBridge (InteractiveData.App.AppSelfMsg msg) where
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.App"
+    , typeName: "AppSelfMsg"
     , typeArgs: [ "msg" /\ tsBridge (Proxy :: _ msg) ]
     }
 
@@ -200,8 +259,14 @@ instance TsBridge Null where
 instance (TsBridge a, TsBridge b) => TsBridge (Either a b) where
   tsBridge = TSB.tsBridgeEither Tok
 
+instance (TsBridge a, TsBridge b) => TsBridge (These a b) where
+  tsBridge = tsBridgeThese Tok
+
 instance TsBridge a => TsBridge (Maybe a) where
   tsBridge = TSB.tsBridgeMaybe Tok
+
+instance TsBridge a => TsBridge (Nullable a) where
+  tsBridge = TSB.tsBridgeNullable Tok
 
 --------------------------------------------------------------------------------
 --- Data.Array.NonEmpty
@@ -214,4 +279,23 @@ instance
     { moduleName: "Data.Array.NonEmpty"
     , typeName: "NonEmptyArray"
     , typeArgs: [] -- TODO
+    }
+
+--------------------------------------------------------------------------------
+
+tsBridgeThese
+  :: forall tok a b
+   . TsBridgeBy tok a
+  => TsBridgeBy tok b
+  => tok
+  -> Proxy (These a b)
+  -> TsBridgeM DTS.TsType
+tsBridgeThese tok =
+  TSB.tsBridgeOpaqueType
+    { moduleName: "Data.These"
+    , typeName: "These"
+    , typeArgs:
+        [ "A" /\ tsBridgeBy tok (Proxy :: _ a)
+        , "B" /\ tsBridgeBy tok (Proxy :: _ b)
+        ]
     }
