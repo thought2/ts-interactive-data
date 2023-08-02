@@ -1,18 +1,24 @@
 module TS.InteractiveData
-  ( string_
+  ( runReactHtml
+  , string_
   , toApp
   , tsModules
   ) where
 
 import Prelude
 
+import Chameleon (Key(..))
 import Chameleon.Impl.ReactBasic (ReactHtml)
+import Chameleon.Impl.ReactBasic as C.R
 import DTS as DTS
 import Data.Either (Either)
 import Data.Int as Int
 import Data.Maybe (Maybe(..))
 import Data.Nullable (Nullable, toMaybe)
 import Data.These (These)
+import Data.Tuple (Tuple)
+import Effect (Effect)
+import Foreign (Foreign)
 import InteractiveData (DataUI, IDSurface, StringMsg, StringState)
 import InteractiveData as ID
 import InteractiveData.App (AppSelfMsg, AppState)
@@ -24,6 +30,7 @@ import InteractiveData.Entry (InteractiveDataApp, ToAppCfg, ToAppOptional, ToApp
 import InteractiveData.Run.Types.HtmlT (IDHtmlT)
 import Literals.Null as Lit
 import Prim.Boolean (False, True)
+import React.Basic (JSX)
 import Record as Record
 import TS.InteractiveData.Unjustify (unjustify)
 import TsBridge (TsRecord, TypeVar)
@@ -130,11 +137,16 @@ toApp tsOpt =
   in
     ID.toApp cfg
 
-foo :: forall @a @b. a -> b -> Unit
-foo _ _ = unit
+------------------------------------------------------------------------------
+--- Run
+------------------------------------------------------------------------------
 
-bar :: forall @a @b. a -> b -> Unit
-bar _ _ = unit
+runReactHtml
+  :: forall @a
+   . { handler :: a -> Effect Unit }
+  -> ReactHtml a
+  -> JSX
+runReactHtml h = C.R.runReactHtml h C.R.defaultConfig
 
 ------------------------------------------------------------------------------
 --- TS Bridge
@@ -158,5 +170,6 @@ tsModules =
     [ TSB.tsValues Tok
         { string_
         , toApp: toApp @VarMsg @VarSta @VarA
+        , runReactHtml: runReactHtml @VarA
         }
     ]

@@ -7,12 +7,13 @@ import Chameleon.Impl.ReactBasic as Chameleon.Impl.ReactBasic
 import DTS as DTS
 import Data.Array.NonEmpty as Data.Array.NonEmpty
 import Data.Either (Either)
-import Data.Maybe (Maybe)
+import Data.Maybe (Maybe(..))
 import Data.Nullable (Nullable)
 import Data.Symbol (class IsSymbol)
 import Data.These (These)
 import Data.Tuple.Nested ((/\))
 import DataMVC.Types as DataMVC.Types
+import Effect (Effect)
 import InteractiveData (IDSurface)
 import InteractiveData as InteractiveData
 import InteractiveData.App as InteractiveData.App
@@ -21,6 +22,7 @@ import InteractiveData.App.WrapData as InteractiveData.App.WrapData
 import InteractiveData.Core as InteractiveData.Core
 import InteractiveData.Run.Types.HtmlT (IDHtmlT)
 import Literals.Null (Null)
+import React.Basic as React.Basic
 import TsBridge (class TsBridgeBy, TsBridgeM, TsRecord, TypeVar, tsBridgeBy)
 import TsBridge as TSB
 import Type.Proxy (Proxy(..))
@@ -216,6 +218,16 @@ instance (TsBridge msg) => TsBridge (InteractiveData.App.AppSelfMsg msg) where
     }
 
 --------------------------------------------------------------------------------
+--- React.Basic
+--------------------------------------------------------------------------------
+
+instance TsBridge React.Basic.JSX where
+  tsBridge _ = pure $
+    DTS.TsTypeConstructor
+      (DTS.TsQualName (Just (DTS.TsImportPath "react")) (DTS.TsName "ReactNode"))
+      (DTS.TsTypeArgs [])
+
+--------------------------------------------------------------------------------
 
 instance TsBridge Number where
   tsBridge = TSB.tsBridgeNumber
@@ -267,6 +279,9 @@ instance TsBridge a => TsBridge (Maybe a) where
 
 instance TsBridge a => TsBridge (Nullable a) where
   tsBridge = TSB.tsBridgeNullable Tok
+
+instance TsBridge a => TsBridge (Effect a) where
+  tsBridge = TSB.tsBridgeEffect Tok
 
 --------------------------------------------------------------------------------
 --- Data.Array.NonEmpty
