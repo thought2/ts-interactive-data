@@ -3,6 +3,7 @@ module TS.InteractiveData
   , string_
   , toApp
   , tsModules
+  , useApp
   ) where
 
 import Prelude
@@ -17,7 +18,9 @@ import Data.Maybe (Maybe(..))
 import Data.Nullable (Nullable, toMaybe)
 import Data.These (These)
 import Data.Tuple (Tuple)
+import DataMVC.Types (DataResult)
 import Effect (Effect)
+import Effect.Uncurried (EffectFn1, runEffectFn1)
 import Foreign (Foreign)
 import InteractiveData (DataUI, IDSurface, StringMsg, StringState)
 import InteractiveData as ID
@@ -38,6 +41,7 @@ import TsBridge as TSB
 import TsBridge.InteractiveData.Class (Tok(..))
 import TsBridge.Types.TsRecord as TsRec
 import Type.Proxy (Proxy(..))
+import Unsafe.Coerce (unsafeCoerce)
 import Untagged.Union (type (|+|), fromOneOf)
 
 ------------------------------------------------------------------------------
@@ -149,6 +153,37 @@ runReactHtml
 runReactHtml h = C.R.runReactHtml h C.R.defaultConfig
 
 ------------------------------------------------------------------------------
+--- Hooks
+------------------------------------------------------------------------------
+
+foreign import useState
+  :: forall a
+   . a
+  -> { state :: a, setState :: EffectFn1 (a -> a) Unit }
+
+useApp
+  :: forall @msg @sta @a
+   . InteractiveDataApp ReactHtml msg sta a
+  -> { jsx :: JSX, data :: DataResult a }
+useApp { ui, extract } =
+  let
+    { state, setState } = useState ui.init
+
+    reactHtml :: ReactHtml msg
+    reactHtml = ui.view state
+
+    handler :: msg -> Effect Unit
+    handler msg = runEffectFn1 setState (ui.update msg)
+
+    jsx :: JSX
+    jsx = runReactHtml { handler } reactHtml
+
+    dataResult :: DataResult a
+    dataResult = extract state
+  in
+    { jsx, data: dataResult }
+
+------------------------------------------------------------------------------
 --- TS Bridge
 ------------------------------------------------------------------------------
 
@@ -171,5 +206,6 @@ tsModules =
         { string_
         , toApp: toApp @VarMsg @VarSta @VarA
         , runReactHtml: runReactHtml @VarA
+        , useApp: useApp @VarMsg @VarSta @VarA
         }
     ]

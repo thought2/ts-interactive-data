@@ -18,29 +18,14 @@ const sampleApp = pipe(
   })
 );
 
-// 3. Use functions from the App interface inside a regular React Component
+// 3. With the `useApp` hook you can integrate the UI into any React app
 export const App = () => {
-  const ui = sampleApp.ui;
-
-  const [state, setState] = React.useState(ui.init);
+  const { jsx, data } = ID.useApp(sampleApp);
 
   React.useEffect(() => {
     console.log("Data of new state:");
-    console.log(sampleApp.extract(state));
-  }, [state]);
-
-  const reactHtml = ui.view(state);
-
-  const handler = (msg) => () => {
-    setState(ui.update(msg));
-  };
-
-  const jsx = pipe(
-    reactHtml,
-    ID.runReactHtml({
-      handler,
-    })
-  );
+    console.log(data);
+  }, [data]);
 
   return (
     <div>
