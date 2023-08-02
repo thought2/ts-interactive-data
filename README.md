@@ -4,8 +4,19 @@ coming soon!
 
 ## Getting Started
 
-*src/App.tsx*:
+### Installation
+
+```bash
+npm install ts-interactive-data
+npm install fp-glue
+```
+
+### Minimal Example
+
+_src/App.tsx_:
+
 <!-- START demoApp -->
+
 ```ts
 import * as React from "react";
 import * as ID from "ts-interactive-data";
@@ -50,25 +61,31 @@ export const App = () => {
   );
 };
 ```
+
 <!-- END demoApp -->
 
-We also need to create a simple html file and an index.tsx file to run the web app.
+We also need to create a simple html file and an index.tsx to run the web app.
 
-*src/index.tsx:*
+_src/index.tsx:_
+
 <!-- START demoIndex -->
+
 ```ts
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";
 
 const container = document.getElementById("app");
-const root = createRoot(container)
+const root = createRoot(container);
 root.render(<App />);
 ```
+
 <!-- END demoIndex -->
 
-*static/index.html:*
+_static/index.html:_
+
 <!-- START demoHtml -->
+
 ```html
 <html>
   <body>
@@ -77,4 +94,11 @@ root.render(<App />);
   </body>
 </html>
 ```
+
 <!-- END demoHtml -->
+
+### Run
+
+```bash
+parcel static/index.html
+```
