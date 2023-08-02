@@ -1,6 +1,8 @@
 # ts-interactive-data
 
-coming soon!
+## Discaimer ⚠
+This library is in early development and the API is not stable yet. Things may not yet work as expected.
+
 
 ## Getting Started
 
