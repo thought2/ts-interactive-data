@@ -1,6 +1,6 @@
 {
   "name": "ts-interactive-data",
-  "version": "0.1.0-rc.1",
+  "version": "0.1.0-rc.2",
   "type": "module",
   "dependencies": {
     "fp-glue": "^1.0.3"
