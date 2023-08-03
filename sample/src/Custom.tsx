@@ -8,7 +8,7 @@ import { DataError } from "../../output/MVC.Types";
 import { Maybe } from "../../output/Data.Maybe";
 import { DataTree } from "../../output/InteractiveData.Core";
 
-type Color = {
+export type Color = {
   red: number;
   green: number;
   blue: number;
@@ -46,12 +46,27 @@ const view =
     };
   };
 
-const colorDataUi: DataUI<ColorMsg, ColorState, Color> = (ctx) => {
-  return {
-    name: "Color",
-    extract,
-    init,
-    update,
-    view,
-  };
+export type ColorCfg = {
+  label?: string;
 };
+
+export const color =
+  (cfg: ColorCfg = {}): DataUI<ColorMsg, ColorState, Color> =>
+  (ctx) => {
+    return {
+      name: "Color",
+      extract,
+      init,
+      update,
+      view,
+    };
+  };
+
+function componentToHex(c) {
+  var hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
