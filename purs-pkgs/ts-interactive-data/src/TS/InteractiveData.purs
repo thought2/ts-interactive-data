@@ -3,7 +3,9 @@ module TS.InteractiveData
   , matchMaybe
   , mkIdHtml
   , mkJust
+  , mkLeft
   , mkNothing
+  , mkRight
   , noTreeChildren
   , runReactHtml
   , string_
