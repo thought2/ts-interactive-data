@@ -1,6 +1,5 @@
 module TS.InteractiveData.Unjustify where
 
-
 import Data.Maybe (Maybe, fromMaybe)
 import Data.Symbol (class IsSymbol)
 import Prim.Row as Row

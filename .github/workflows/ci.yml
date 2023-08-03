@@ -6,4 +6,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2.4.0
     - uses: cachix/install-nix-action@v15 
+
+    - run: npm ci
+
     - run: nix develop --command just ci
+    - run: nix develop --command just dist-example
+
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: dist/purescript-interactive-data
