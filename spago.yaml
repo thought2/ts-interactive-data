@@ -1,7 +1,7 @@
 workspace:
   extra_packages:
     interactive-data:
-      git: github.com/thought2/purescript-interactive-data.all.git
+      git: "https://github.com/thought2/purescript-interactive-data.all.git"
       ref: v0.3.0
       dependencies:
         - arrays
@@ -26,7 +26,7 @@ workspace:
         - typelevel-prelude
 
     ts-bridge:
-      git: github.com/thought2/purescript-ts-bridge.git
+      git: "https://github.com/thought2/purescript-ts-bridge.git"
       ref: 9dbf7787c5dc4d704064cc5809c0dcaf64b79bf8
       dependencies:
         [ "aff"

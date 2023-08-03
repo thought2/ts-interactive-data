@@ -1,6 +1,6 @@
 # ts-interactive-data
 
-![interactive-data](./assets/logo.svg)
+<img src="https://github.com/thought2/assets/blob/60a1704df4d623386090b884170d919e67a1161b/interactive-data/logo.svg" width="200">
 
 Composable UIs for interactive data.
 
