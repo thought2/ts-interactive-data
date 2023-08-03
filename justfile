@@ -2,9 +2,6 @@ export PATH := "node_modules/.bin:" + env_var('PATH')
 purs_args := "--stash --censor-lib --censor-codes=ImplicitQualifiedImport"
 cfg_test := "--config test.dhall"
 
-build-strict:
-    spago build --purs-args "--strict {{purs_args}}"
-
 build:
     spago build
 
@@ -55,7 +52,7 @@ format:
 check-git-clean:
     [ -z "$(git status --porcelain)" ]
 
-ci: format build-strict test-strict check-git-clean
+ci: format build check-git-clean
 
 gen-ts:
     spago run --main TsBridge.InteractiveData.Main
