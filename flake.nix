@@ -38,6 +38,7 @@
             pkgs.bashInteractive
             pkgs.just
             pkgs.graphviz
+            okgs.purescript
           ];
         };
       }
