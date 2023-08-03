@@ -1,36 +1,42 @@
 module TS.InteractiveData
-  ( runReactHtml
+  ( matchEither
+  , matchMaybe
+  , mkIdHtml
+  , mkJust
+  , mkNothing
+  , noTreeChildren
+  , runReactHtml
   , string_
   , toApp
   , tsModules
   , useApp
-  ) where
+  )
+  where
 
 import Prelude
 
-import Chameleon (Key(..))
-import Chameleon.Impl.ReactBasic (ReactHtml)
 import Chameleon.Impl.ReactBasic as C.R
+import Chameleon.Impl.ReactBasic.Html (ReactHtml(..))
+import Chameleon.Transformers.Ctx.Trans (CtxT(..))
+import Chameleon.Transformers.FunctorTrans.Class as FT
+import Chameleon.Transformers.OutMsg.Trans (OutMsgT(..))
 import DTS as DTS
-import Data.Either (Either)
+import Data.Either (Either(..))
 import Data.Int as Int
 import Data.Maybe (Maybe(..))
-import Data.Nullable (Nullable, toMaybe)
-import Data.These (These)
-import Data.Tuple (Tuple)
+import Data.These (These(..))
 import DataMVC.Types (DataResult)
 import Effect (Effect)
 import Effect.Uncurried (EffectFn1, runEffectFn1)
-import Foreign (Foreign)
 import InteractiveData (DataUI, IDSurface, StringMsg, StringState)
 import InteractiveData as ID
 import InteractiveData.App (AppSelfMsg, AppState)
 import InteractiveData.App.WrapData (WrapMsg, WrapState)
-import InteractiveData.Core (IDOutMsg)
+import InteractiveData.Core (DataTreeChildren(..), IDOutMsg, IDViewCtx)
 import InteractiveData.DataUIs.String (CfgString)
 import InteractiveData.DataUIs.String as DataUIs.String
 import InteractiveData.Entry (InteractiveDataApp, ToAppCfg, ToAppOptional, ToAppMandatory, defaultToAppCfg)
-import InteractiveData.Run.Types.HtmlT (IDHtmlT)
+import InteractiveData.Run.Types.HtmlT (IDHtmlT(..))
 import Literals.Null as Lit
 import Prim.Boolean (False, True)
 import React.Basic (JSX)
@@ -41,7 +47,6 @@ import TsBridge as TSB
 import TsBridge.InteractiveData.Class (Tok(..))
 import TsBridge.Types.TsRecord as TsRec
 import Type.Proxy (Proxy(..))
-import Unsafe.Coerce (unsafeCoerce)
 import Untagged.Union (type (|+|), fromOneOf)
 
 ------------------------------------------------------------------------------
@@ -152,6 +157,27 @@ runReactHtml
   -> JSX
 runReactHtml h = C.R.runReactHtml h C.R.defaultConfig
 
+mkIdHtml
+  :: forall @msg
+   . ( { onMsg :: msg -> Effect Unit
+       , onGlobalMsg :: IDOutMsg -> Effect Unit
+       , ctx :: IDViewCtx
+       }
+       -> JSX
+     )
+  -> IDHtmlT ReactHtml msg
+mkIdHtml mkJsx = IDHtmlT $
+  CtxT \ctx ->
+    let
+      html :: ReactHtml (These msg IDOutMsg)
+      html = ReactHtml \{ handler } _ -> mkJsx
+        { onMsg: handler <<< This
+        , onGlobalMsg: handler <<< That
+        , ctx
+        }
+    in
+      FT.lift $ OutMsgT html
+
 ------------------------------------------------------------------------------
 --- Hooks
 ------------------------------------------------------------------------------
@@ -184,6 +210,41 @@ useApp { ui, extract } =
     { jsx, data: dataResult }
 
 ------------------------------------------------------------------------------
+--- Util
+------------------------------------------------------------------------------
+
+mkLeft :: forall @a @b. a -> Either a b
+mkLeft x = Left x
+
+mkRight :: forall @a @b. b -> Either a b
+mkRight x = Right x
+
+matchEither
+  :: forall @a @b @c
+   . { onLeft :: a -> c, onRight :: b -> c }
+  -> Either a b
+  -> c
+matchEither { onLeft, onRight } =
+  case _ of
+    Left x -> onLeft x
+    Right x -> onRight x
+
+mkJust :: forall @a. a -> Maybe a
+mkJust x = Just x
+
+mkNothing :: forall @a. Unit -> Maybe a
+mkNothing _ = Nothing
+
+matchMaybe :: forall @a @b. { onJust :: a -> b, onNothing :: Unit -> b } -> Maybe a -> b
+matchMaybe { onJust, onNothing } =
+  case _ of
+    Just x -> onJust x
+    Nothing -> onNothing unit
+
+noTreeChildren :: forall @msg. Unit -> DataTreeChildren (IDHtmlT ReactHtml) msg
+noTreeChildren _ = Fields []
+
+------------------------------------------------------------------------------
 --- TS Bridge
 ------------------------------------------------------------------------------
 
@@ -191,8 +252,11 @@ moduleName :: String
 moduleName = "TS.InteractiveData"
 
 type VarMsg = TypeVar "msg"
+
 type VarSta = TypeVar "sta"
+
 type VarA = TypeVar "a"
+
 type VarB = TypeVar "b"
 
 type VarC = TypeVar "c"
@@ -207,5 +271,18 @@ tsModules =
         , toApp: toApp @VarMsg @VarSta @VarA
         , runReactHtml: runReactHtml @VarA
         , useApp: useApp @VarMsg @VarSta @VarA
+
+        , mkIdHtml: mkIdHtml @VarMsg
+
+        -- Util
+        , mkLeft: mkLeft @VarA @VarB
+        , mkRight: mkRight @VarA @VarB
+        , matchEither: matchEither @VarA @VarB @VarC
+
+        , mkJust: mkJust @VarA
+        , mkNothing: mkNothing @VarA
+        , matchMaybe: matchMaybe @VarA @VarB
+
+        , noTreeChildren: noTreeChildren @VarMsg
         }
     ]

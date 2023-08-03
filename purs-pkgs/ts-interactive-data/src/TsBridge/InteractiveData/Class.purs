@@ -11,8 +11,10 @@ import Data.Maybe (Maybe(..))
 import Data.Nullable (Nullable)
 import Data.Symbol (class IsSymbol)
 import Data.These (These)
+import Data.Tuple (Tuple)
 import Data.Tuple.Nested ((/\))
 import DataMVC.Types as DataMVC.Types
+import DataMVC.Types as MVC.Types
 import Effect (Effect)
 import InteractiveData (IDSurface)
 import InteractiveData as InteractiveData
@@ -21,6 +23,7 @@ import InteractiveData.App.WrapData (WrapMsg, WrapState)
 import InteractiveData.App.WrapData as InteractiveData.App.WrapData
 import InteractiveData.Core as InteractiveData.Core
 import InteractiveData.Run.Types.HtmlT (IDHtmlT)
+import InteractiveData.Run.Types.HtmlT as InteractiveData.Run.Types.HtmlT
 import Literals.Null (Null)
 import React.Basic as React.Basic
 import TsBridge (class TsBridgeBy, TsBridgeM, TsRecord, TypeVar, tsBridgeBy)
@@ -121,6 +124,13 @@ instance TsBridge DataMVC.Types.DataPathSegment where
     , typeArgs: []
     }
 
+instance TsBridge MVC.Types.DataError where
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "MVC.Types"
+    , typeName: "DataError"
+    , typeArgs: []
+    }
+
 --------------------------------------------------------------------------------
 --- InteractiveData
 --------------------------------------------------------------------------------
@@ -168,16 +178,47 @@ instance (TsBridge msg) => TsBridge (Chameleon.Impl.ReactBasic.ReactHtml msg) wh
 --------------------------------------------------------------------------------
 
 instance (TsBridge msg) => TsBridge (InteractiveData.Core.DataTree (IDHtmlT ReactHtml) msg) where
-  tsBridge = TSB.tsBridgeOpaqueType
+  tsBridge _ = TSB.tsBridgeNewtype Tok
     { moduleName: "InteractiveData.Core"
     , typeName: "DataTree"
     , typeArgs: [ "msg" /\ tsBridge (Proxy :: _ msg) ]
     }
+    (Proxy :: Proxy (InteractiveData.Core.DataTree (IDHtmlT ReactHtml) msg))
 
 instance TsBridge InteractiveData.Core.IDOutMsg where
   tsBridge = TSB.tsBridgeOpaqueType
     { moduleName: "InteractiveData.Core"
     , typeName: "IDOutMsg"
+    , typeArgs: []
+    }
+
+instance (TsBridge msg) => TsBridge (InteractiveData.Core.DataAction msg) where
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.Core"
+    , typeName: "DataAction"
+    , typeArgs: [ "msg" /\ tsBridge (Proxy :: _ msg) ]
+    }
+
+instance (TsBridge msg) => TsBridge (InteractiveData.Core.DataTreeChildren (IDHtmlT ReactHtml) msg) where
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.Core"
+    , typeName: "DataTreeChildren"
+    , typeArgs: [ "msg" /\ tsBridge (Proxy :: _ msg) ]
+    }
+
+instance (TsBridge msg) => TsBridge (InteractiveData.Run.Types.HtmlT.IDHtmlT ReactHtml msg) where
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.Core"
+    , typeName: "IDHtmlT"
+    , typeArgs: [ "msg" /\ tsBridge (Proxy :: _ msg) ]
+    }
+
+instance
+  TsBridge InteractiveData.Core.ViewMode
+  where
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData.Core"
+    , typeName: "ViewMode"
     , typeArgs: []
     }
 
@@ -283,17 +324,21 @@ instance TsBridge a => TsBridge (Nullable a) where
 instance TsBridge a => TsBridge (Effect a) where
   tsBridge = TSB.tsBridgeEffect Tok
 
+instance (TsBridge a, TsBridge b) => TsBridge (Tuple a b) where
+  tsBridge = TSB.tsBridgeTuple Tok
+
 --------------------------------------------------------------------------------
 --- Data.Array.NonEmpty
 --------------------------------------------------------------------------------
 
 instance
+  TsBridge a =>
   TsBridge (Data.Array.NonEmpty.NonEmptyArray a)
   where
   tsBridge = TSB.tsBridgeOpaqueType
     { moduleName: "Data.Array.NonEmpty"
     , typeName: "NonEmptyArray"
-    , typeArgs: [] -- TODO
+    , typeArgs: [ "a" /\ tsBridge (Proxy :: _ a) ]
     }
 
 --------------------------------------------------------------------------------
