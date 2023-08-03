@@ -1,8 +1,27 @@
 workspace:
   extra_packages:
+    chameleon-react-basic:
+      git: "https://github.com/thought2/purescript-chameleon-react-basic.git"
+      ref: v0.1.0
+      dependencies:
+        - arrays
+        - chameleon
+        - effect
+        - foreign
+        - foreign-object
+        - maybe
+        - prelude
+        - react-basic
+        - react-basic-dom
+        - react-basic-hooks
+        - strings
+        - tuples
+        - unsafe-coerce
+        - web-dom
+    
     interactive-data:
       git: "https://github.com/thought2/purescript-interactive-data.all.git"
-      ref: v0.3.0
+      ref: 1150664a9a3ac9ce21cd06d56a5fb2ef1e227925
       dependencies:
         - arrays
         - bifunctors
