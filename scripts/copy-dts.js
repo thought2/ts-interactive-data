@@ -1,7 +1,7 @@
 import { globSync } from "glob";
 import * as fs from "fs";
 
-const srcDir = "src";
+const srcDir = "purs-pkgs/ts-interactive-data/src";
 const dstDir = "output";
 
 const files = globSync("**/*.d.ts", { cwd: srcDir });
@@ -17,5 +17,8 @@ files.forEach((srcPath) => {
 
   console.log(`Copying ${srcPathFinal} to ${dstPathFinal}`);
 
-  fs.copyFileSync(srcPathFinal, dstPathFinal);
+  const content = fs.readFileSync(srcPathFinal, "utf8");
+  const newContent = content.replace("../../../../../output/", "../");
+
+  fs.writeFileSync(dstPathFinal, newContent, "utf8");
 });
