@@ -1,5 +1,24 @@
 # ts-interactive-data
 
+![interactive-data](./assets/logo.svg)
+
+Composable UIs for interactive data.
+
+![ci](https://github.com/thought2/purescript-interactive-data/actions/workflows/ci.yaml/badge.svg)
+
+## Table of Contents
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Discaimer ⚠](#discaimer-)
+- [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Minimal Example](#minimal-example)
+  - [Run](#run)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Discaimer ⚠
 
 This library is in early development and the API is not stable yet. Things may not yet work as expected.

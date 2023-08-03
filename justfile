@@ -52,7 +52,9 @@ format:
 check-git-clean:
     [ -z "$(git status --porcelain)" ]
 
-ci: format build check-git-clean
+ci: format build gen check-git-clean
+
+gen: gen-readme gen-ts
 
 gen-ts:
     spago run --main TsBridge.InteractiveData.Main
@@ -61,3 +63,4 @@ gen-ts:
 
 gen-readme:
     node scripts/gen-readme.js
+    doctoc README.md
