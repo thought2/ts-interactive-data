@@ -12,8 +12,7 @@ module TS.InteractiveData
   , toApp
   , tsModules
   , useApp
-  )
-  where
+  ) where
 
 import Prelude
 

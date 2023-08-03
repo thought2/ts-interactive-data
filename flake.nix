@@ -1,5 +1,5 @@
 {
-  description = "purescript-lib";
+  description = "purescript-labeled-data";
 
   inputs.nixpkgs.url = "nixpkgs";
 
@@ -16,7 +16,7 @@
         overlays = [
           (prev: final: {
             inherit (easy-purescript-nix) purs-tidy psa;
-            purescript = easy-purescript-nix.purs-0_15_8;
+            purescript = easy-purescript-nix.purs-0_15_10;
           })
         ];
 
@@ -34,13 +34,10 @@
       {
         devShell = pkgs.mkShell {
           nativeBuildInputs = [
-            pkgs.purescript
             pkgs.purs-tidy
             pkgs.bashInteractive
-            pkgs.spago
             pkgs.just
-            pkgs.yarn
-            pkgs.psa
+            pkgs.graphviz
           ];
         };
       }
