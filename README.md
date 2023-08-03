@@ -21,21 +21,6 @@ npm install fp-glue
 import * as ID from "ts-interactive-data";
 import * as React from "react";
 import { pipe } from "fp-glue";
-import { DataUI } from "../../output/DataMVC.Types";
-import { StringMsg, StringState } from "../../output/InteractiveData";
-
-type Expected = DataUI<
-  | { type: "firstName"; value: StringMsg }
-  | { type: "lastName"; value: StringMsg },
-  {
-    firstName: StringState;
-    lastName: StringState;
-  },
-  {
-    firstName: string;
-    lastName: string;
-  }
->;
 
 // 1. Compose a "Data UI" for a specific type
 const sampleDataUi = ID.record_({
@@ -44,22 +29,12 @@ const sampleDataUi = ID.record_({
       multilineInline: false,
       maxLength: 100,
     }),
-    lastName: ID.string_({
-      multilineInline: false,
-      maxLength: 100,
-    }),
+    lastName: ID.string_({}),
   }),
   settings: ID.record_({
-    accountId: ID.string_({
-      multilineInline: false,
-      maxLength: 100,
-    }),
-    description: ID.string_({
-      multilineInline: false,
-      maxLength: 100,
-    }),
+    accountId: ID.string_({}),
+    description: ID.string_({}),
   }),
-  
 });
 
 // 2. Turn "Data UI" into an App interface
@@ -80,11 +55,7 @@ export const App = () => {
     console.log(data);
   }, [data]);
 
-  return (
-    <div>
-      {jsx}
-    </div>
-  );
+  return <div>{jsx}</div>;
 };
 ```
 <!-- END demoApp -->
