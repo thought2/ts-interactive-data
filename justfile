@@ -18,7 +18,7 @@ dist-examples:
     rm -rf dist
     for dir in demo/*/; do \
         echo Building $name; \
-        main_dir="purescript-interactive-data"; \
+        main_dir="ts-interactive-data"; \
         name=$(basename $dir); \
         parcel build --dist-dir dist/$main_dir/$name --public-url /$main_dir/$name/ $dir/index.html ; \
     done
