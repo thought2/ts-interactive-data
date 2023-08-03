@@ -13,6 +13,19 @@ test-strict:
 
 test: test-purs
 
+dist-examples:
+    #!/usr/bin/env bash
+    set -euxo pipefail
+    rm -f output/package.json
+    rm -rf .parcel-cache
+    rm -rf dist
+    for dir in demo/*/; do \
+        echo Building $name; \
+        main_dir="purescript-interactive-data"; \
+        name=$(basename $dir); \
+        parcel build --dist-dir dist/$main_dir/$name --public-url /$main_dir/$name/ $dir/index.html ; \
+    done
+
 test-purs:
     spago {{cfg_test}} test --purs-args "{{purs_args}}"
 

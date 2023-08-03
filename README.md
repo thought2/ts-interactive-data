@@ -15,10 +15,9 @@ npm install fp-glue
 
 ### Minimal Example
 
-_src/App.tsx_:
-
 <!-- START demoApp -->
-```ts
+*App.tsx:*
+```tsx
 import * as ID from "ts-interactive-data";
 import * as React from "react";
 import { pipe } from "fp-glue";
@@ -60,10 +59,10 @@ export const App = () => {
 
 We also need to create a simple html file and an index.tsx to run the web app.
 
-_src/index.tsx:_
 
 <!-- START demoIndex -->
-```ts
+*index.tsx:*
+```tsx
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";
@@ -74,13 +73,13 @@ root.render(<App />);
 ```
 <!-- END demoIndex -->
 
-_static/index.html:_
 
 <!-- START demoHtml -->
+*index.html:*
 ```html
 <html>
   <body>
-    <script src="../src/index.tsx" type="module"></script>
+    <script src="./index.tsx" type="module"></script>
     <div id="app"></div>
   </body>
 </html>

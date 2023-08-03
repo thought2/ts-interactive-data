@@ -1,12 +1,12 @@
 import * as React from "react";
 import { pipe } from "fp-glue";
-import { DataUI } from "../../output/DataMVC.Types";
-import * as ID from "../../ts-src";
-import { Either } from "../../output/Data.Either";
-import { NonEmptyArray } from "../../output/Data.Array.NonEmpty";
-import { DataError } from "../../output/MVC.Types";
-import { Maybe } from "../../output/Data.Maybe";
-import { DataTree } from "../../output/InteractiveData.Core";
+import { DataUI } from "../../../output/DataMVC.Types";
+import * as ID from "../../../ts-src";
+import { Either } from "../../../output/Data.Either";
+import { NonEmptyArray } from "../../../output/Data.Array.NonEmpty";
+import { DataError } from "../../../output/MVC.Types";
+import { Maybe } from "../../../output/Data.Maybe";
+import { DataTree } from "../../../output/InteractiveData.Core";
 
 export type Color = {
   red: number;

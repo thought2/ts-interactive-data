@@ -5,7 +5,6 @@
   "dependencies": {
     "fp-glue": "^1.0.3"
   },
-  "main": "dist/ts-src/index.js",
   "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
@@ -17,6 +16,8 @@
     "parcel": "^2.9.3",
     "prettier": "^3.0.0",
     "process": "^0.11.10",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   },
