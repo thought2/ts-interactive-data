@@ -12,6 +12,7 @@ Composable UIs for interactive data.
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [Discaimer ⚠](#discaimer-)
+- [Live Demo](#live-demo)
 - [Getting Started](#getting-started)
   - [Installation](#installation)
   - [Minimal Example](#minimal-example)
@@ -22,6 +23,11 @@ Composable UIs for interactive data.
 ## Discaimer ⚠
 
 This library is in early development and the API is not stable yet. Things may not yet work as expected.
+
+## Live Demo
+
+[thought2.github.io/purescript-interactive-data](https://thought2.github.io/ts-interactive-data/basic)
+
 
 ## Getting Started
 
