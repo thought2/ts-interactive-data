@@ -10,6 +10,9 @@ test-strict:
 
 test: test-purs
 
+dev: clean-parcel
+    parcel demo/basic/index.html
+
 dist-examples:
     #!/usr/bin/env bash
     set -euxo pipefail
@@ -26,8 +29,11 @@ dist-examples:
 test-purs:
     spago {{cfg_test}} test --purs-args "{{purs_args}}"
 
-clean:
-    rm -rf .spago output .psa-stash .parcel-cache
+clean: clean-parcel
+    rm -rf .spago output .psa-stash 
+    
+clean-parcel:
+    rm -rf .parcel-cache
 
 dist:
     rm -rf output
@@ -52,7 +58,7 @@ format:
 check-git-clean:
     [ -z "$(git status --porcelain)" ]
 
-ci: format build gen check-git-clean
+ci: clean format build gen check-git-clean
 
 gen: gen-readme gen-ts
 

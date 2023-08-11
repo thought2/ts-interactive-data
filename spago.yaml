@@ -3,46 +3,14 @@ workspace:
     chameleon-react-basic:
       git: "https://github.com/thought2/purescript-chameleon-react-basic.git"
       ref: v0.1.0
-      dependencies:
-        - arrays
-        - chameleon
-        - effect
-        - foreign
-        - foreign-object
-        - maybe
-        - prelude
-        - react-basic
-        - react-basic-dom
-        - react-basic-hooks
-        - strings
-        - tuples
-        - unsafe-coerce
-        - web-dom
     
+    chameleon-styled:
+      git: "https://github.com/thought2/purescript-chameleon-styled.git"
+      ref: v2.0.0-rc.2
+
     interactive-data:
       git: "https://github.com/thought2/purescript-interactive-data.all.git"
-      ref: 1150664a9a3ac9ce21cd06d56a5fb2ef1e227925
-      dependencies:
-        - arrays
-        - bifunctors
-        - chameleon
-        - chameleon-styled
-        - chameleon-transformers
-        - convertable-options
-        - data-mvc
-        - dodo-printer
-        - either
-        - foldable-traversable
-        - identity
-        - maybe
-        - mvc
-        - newtype
-        - ordered-collections
-        - prelude
-        - strings
-        - these
-        - tuples
-        - typelevel-prelude
+      ref: v2.0.0-rc.1
 
     ts-bridge:
       git: "https://github.com/thought2/purescript-ts-bridge.git"
