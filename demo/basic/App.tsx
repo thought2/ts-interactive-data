@@ -5,19 +5,19 @@ import { pipe } from "fp-glue";
 // 1. Compose a "Data UI" for a specific type
 const sampleDataUi = ID.record_({
   user: ID.record_({
-    firstName: ID.string_({
+    firstName: ID.string({
       multilineInline: false,
       maxLength: 100,
     }),
-    lastName: ID.string_({}),
-    size: ID.number_({
+    lastName: ID.string({}),
+    size: ID.number({
       min: 0,
       max: 100,
     }),
   }),
   settings: ID.record_({
-    accountId: ID.string_({}),
-    description: ID.string_({}),
+    accountId: ID.string({}),
+    description: ID.string({}),
   }),
 });
 

@@ -14,7 +14,7 @@ workspace:
 
     ts-bridge:
       git: "https://github.com/thought2/purescript-ts-bridge.git"
-      ref: 9dbf7787c5dc4d704064cc5809c0dcaf64b79bf8
+      ref: 065b470affb7ea19cf4fdad288636794531c159c
       dependencies:
         [ "aff"
         , "aff-promise"

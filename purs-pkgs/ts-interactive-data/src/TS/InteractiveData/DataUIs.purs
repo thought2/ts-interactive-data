@@ -1,6 +1,6 @@
 module TS.InteractiveData.DataUIs
-  ( number_
-  , string_
+  ( number
+  , string
   , tsModules
   ) where
 
@@ -68,10 +68,10 @@ stringMapCfg tsOpt =
     in
       map Int.round maybeNumber
 
-string_
+string
   :: TsCfgString
   -> DataUI (IDSurface (IDHtmlT ReactHtml)) WrapMsg WrapState StringMsg StringState String
-string_ opt =
+string opt =
   let
     cfg :: CfgString StringMsg
     cfg = stringMapCfg opt
@@ -98,10 +98,10 @@ intMapCfg tsOpt =
     , step: get @"step" tsOpt
     }
 
-number_
+number
   :: TsCfgNumber
   -> DataUI (IDSurface (IDHtmlT ReactHtml)) WrapMsg WrapState NumberMsg NumberState Number
-number_ opt =
+number opt =
   let
     cfg :: CfgNumber
     cfg = intMapCfg opt
@@ -131,7 +131,7 @@ tsModules :: Either TSB.AppError (Array DTS.TsModuleFile)
 tsModules =
   TSB.tsModuleFile moduleName
     [ TSB.tsValues Tok
-        { string_
-        , number_
+        { string
+        , number
         }
     ]
