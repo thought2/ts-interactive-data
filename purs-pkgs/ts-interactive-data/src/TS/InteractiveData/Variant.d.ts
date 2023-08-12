@@ -24,5 +24,6 @@ type VariantMsg<RCase, RMsg> = Variant<{
 }>;
 
 export const variant_: <DataUis extends AnyDataUIs>(
-  initKey: keyof DataUis
-) => (dataUis: DataUis) => VariantGetDataUI<DataUis>;
+  initKey: keyof DataUis,
+  dataUis: DataUis
+) => VariantGetDataUI<DataUis>;

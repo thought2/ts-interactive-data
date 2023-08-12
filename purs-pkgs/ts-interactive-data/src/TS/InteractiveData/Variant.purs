@@ -11,6 +11,7 @@ module TS.InteractiveData.Variant
 import Prelude
 
 import Chameleon.Impl.ReactBasic (ReactHtml)
+import Data.Function.Uncurried (Fn2, mkFn2)
 import Data.Maybe (Maybe(..), fromJust)
 import Data.Newtype (un)
 import Data.Traversable (class Foldable, class Traversable)
@@ -67,13 +68,15 @@ keys (Obj obj) =
   coerce $ Object.keys obj
 
 variant_
-  :: Key
-  -> Obj (RDataUI AnyMsg AnySta AnyA)
-  -> RDataUI
-       (VariantMsg Unit (WrapMsg AnyMsg))
-       (Case (WrapState AnySta))
-       (Case AnyA)
-variant_ initKey dataUis = DataUI \ctx ->
+  :: Fn2
+       Key
+       (Obj (RDataUI AnyMsg AnySta AnyA))
+       ( RDataUI
+           (VariantMsg Unit (WrapMsg AnyMsg))
+           (Case (WrapState AnySta))
+           (Case AnyA)
+       )
+variant_ = mkFn2 \initKey dataUis -> DataUI \ctx ->
   let
     dataUiItfs :: Obj (DataUiInterface Surface (WrapMsg AnyMsg) (WrapState AnySta) AnyA)
     dataUiItfs = map (flip runDataUiFinal ctx) dataUis

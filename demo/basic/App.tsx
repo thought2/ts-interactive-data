@@ -1,6 +1,5 @@
 import * as ID from "../../ts-src";
 import * as React from "react";
-import { pipe } from "fp-glue";
 
 // 1. Compose a "Data UI" for a specific type
 const sampleDataUi = ID.record_({
@@ -14,13 +13,10 @@ const sampleDataUi = ID.record_({
       min: 0,
       max: 100,
     }),
-    info: pipe(
-      {
-        age: ID.number({}),
-        name: ID.string({}),
-      },
-      ID.variant_("age")
-    ),
+    info: ID.variant_("age", {
+      age: ID.number({}),
+      name: ID.string({}),
+    }),
   }),
   settings: ID.record_({
     accountId: ID.string({}),
@@ -29,13 +25,10 @@ const sampleDataUi = ID.record_({
 });
 
 // 2. Turn "Data UI" into an App interface
-const sampleApp = pipe(
-  sampleDataUi,
-  ID.toApp({
-    name: "Sample",
-    fullscreen: true,
-  })
-);
+const sampleApp = ID.toApp(sampleDataUi, {
+  name: "Sample",
+  fullscreen: true,
+});
 
 // 3. With the `useApp` hook you can integrate the UI into any React app
 export const App = () => {

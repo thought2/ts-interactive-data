@@ -7,6 +7,7 @@ import Chameleon.Impl.ReactBasic as Chameleon.Impl.ReactBasic
 import DTS as DTS
 import Data.Array.NonEmpty as Data.Array.NonEmpty
 import Data.Either (Either)
+import Data.Function.Uncurried (Fn2)
 import Data.Maybe (Maybe(..))
 import Data.Nullable (Nullable)
 import Data.Symbol (class IsSymbol)
@@ -310,6 +311,9 @@ instance TsBridge a => TsBridge (Array a) where
 
 instance (TsBridge a, TsBridge b) => TsBridge (a -> b) where
   tsBridge = TSB.tsBridgeFunction Tok
+
+instance (TsBridge a1, TsBridge a2, TsBridge b) => TsBridge (Fn2 a1 a2 b) where
+  tsBridge = TSB.tsBridgeFn2 Tok
 
 instance IsSymbol sym => TsBridge (TSB.TypeVar sym) where
   tsBridge = TSB.tsBridgeTypeVar

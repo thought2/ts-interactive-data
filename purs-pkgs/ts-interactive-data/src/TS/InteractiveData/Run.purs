@@ -8,6 +8,7 @@ import Prelude
 import Chameleon.Impl.ReactBasic.Html (ReactHtml)
 import DTS as DTS
 import Data.Either (Either)
+import Data.Function.Uncurried (Fn2, mkFn2)
 import Data.Maybe (Maybe(..))
 import Data.These (These)
 import InteractiveData (DataUI, IDSurface)
@@ -69,19 +70,21 @@ toAppMapCfg tsCfg =
 
 toApp
   :: forall @msg @sta @a
-   . TsCfgToApp a
-  -> DataUI (IDSurface (IDHtmlT ReactHtml)) WrapMsg WrapState msg sta a
-  -> InteractiveDataApp
-       ReactHtml
-       (These (AppSelfMsg (WrapMsg msg)) IDOutMsg)
-       (AppState (WrapState sta))
-       a
-toApp tsOpt =
+   . Fn2
+       (DataUI (IDSurface (IDHtmlT ReactHtml)) WrapMsg WrapState msg sta a)
+       (TsCfgToApp a)
+       ( InteractiveDataApp
+           ReactHtml
+           (These (AppSelfMsg (WrapMsg msg)) IDOutMsg)
+           (AppState (WrapState sta))
+           a
+       )
+toApp = mkFn2 \dataUi tsOpt ->
   let
     cfg :: ToAppCfg a
     cfg = toAppMapCfg tsOpt
   in
-    ID.toApp cfg
+    ID.toApp cfg dataUi
 
 ------------------------------------------------------------------------------
 --- TS Bridge
