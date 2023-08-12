@@ -47,18 +47,6 @@ import * as ID from "ts-interactive-data";
 import * as React from "react";
 import { pipe } from "fp-glue";
 
-type T = {
-  user: {
-    firstName: string;
-    lastName: string;
-    size: number;
-    settings: {
-      accountId: string;
-      description: string;
-    };
-  };
-};
-
 // 1. Compose a "Data UI" for a specific type
 const sampleDataUi = ID.record_({
   user: ID.record_({
@@ -71,7 +59,6 @@ const sampleDataUi = ID.record_({
       min: 0,
       max: 100,
     }),
-    info2: ID.variant_("a")({ a: ID.string({}) }),
     info: pipe(
       {
         age: ID.number({}),
