@@ -18,7 +18,7 @@ import Data.Traversable (class Foldable, class Traversable, for)
 import Data.Tuple (Tuple(..))
 import Data.Tuple.Nested (type (/\), (/\))
 import DataMVC.Types (DataUI(..), DataUiInterface(..), DataResult)
-import DataMVC.Types.DataUI (runDataUi, runDataUiFinal)
+import DataMVC.Types.DataUI (runDataUiFinal)
 import Foreign (Foreign)
 import Foreign.Object (Object)
 import Foreign.Object as Obj
@@ -30,7 +30,6 @@ import InteractiveData.Run.Types.HtmlT (IDHtmlT)
 import MVC.Record (ViewResult)
 import Partial.Unsafe (unsafePartial)
 import Safe.Coerce (coerce)
-import Unsafe.Coerce (unsafeCoerce)
 
 newtype Key = Key String
 

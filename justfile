@@ -1,39 +1,25 @@
 export PATH := "node_modules/.bin:" + env_var('PATH')
-purs_args := "--stash --censor-lib --censor-codes=ImplicitQualifiedImport"
-cfg_test := "--config test.dhall"
 
 build:
     spago build
 
-test-strict:
-    spago {{cfg_test}} test --purs-args "--strict {{purs_args}}"
+build-strict:
+    spago build --json-errors | node scripts/filter-warnings.js
 
-test: test-purs
+test:
+    spago test
 
 dev: clean-parcel
-    parcel demo/basic/index.html
+    parcel demo/basic/index.html | node scripts/filter-warnings.js
 
-dist-examples:
-    #!/usr/bin/env bash
-    set -euxo pipefail
-    rm -f output/package.json
-    rm -rf .parcel-cache
-    rm -rf dist
-    for dir in demo/*/; do \
-        echo Building $name; \
-        main_dir="ts-interactive-data"; \
-        name=$(basename $dir); \
-        parcel build --dist-dir dist/$main_dir/$name --public-url /$main_dir/$name/ $dir/index.html ; \
-    done
+build-ide:
+    spago build --json-errors | node scripts/filter-warnings.js
 
-test-purs:
-    spago {{cfg_test}} test --purs-args "{{purs_args}}"
+format:
+    purs-tidy format-in-place 'purs-pkgs/*/src/**/*.purs'
+    purs-tidy format-in-place 'purs-pkgs/*/test/**/*.purs'
 
-clean: clean-parcel
-    rm -rf .spago output .psa-stash 
-    
-clean-parcel:
-    rm -rf .parcel-cache
+# Dist
 
 dist:
     rm -rf output
@@ -48,17 +34,38 @@ dist_:
     cp -r output dist/output
     rm -rf dist/output/*/externs.cbor
 
-ide:
-    spago build --json-errors
+dist-examples:
+    #!/usr/bin/env bash
+    set -euxo pipefail
+    rm -f output/package.json
+    rm -rf .parcel-cache
+    rm -rf dist
+    for dir in demo/*/; do \
+        echo Building $name; \
+        main_dir="ts-interactive-data"; \
+        name=$(basename $dir); \
+        parcel build --dist-dir dist/$main_dir/$name --public-url /$main_dir/$name/ $dir/index.html ; \
+    done
 
-format:
-    purs-tidy format-in-place 'purs-pkgs/*/src/**/*.purs'
-    purs-tidy format-in-place 'purs-pkgs/*/test/**/*.purs'
+# Clean
+
+clean: clean-parcel
+    rm -rf .spago output .psa-stash 
+    
+clean-parcel:
+    rm -rf .parcel-cache
+
+# CI
+
+ci: clean
+    just ci_
+
+ci_: format build-strict gen check-git-clean
 
 check-git-clean:
     [ -z "$(git status --porcelain)" ]
 
-ci: clean format build gen check-git-clean
+# Generate
 
 gen: gen-readme gen-ts
 

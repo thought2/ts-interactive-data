@@ -10,6 +10,10 @@ const sampleDataUi = ID.record_({
       maxLength: 100,
     }),
     lastName: ID.string_({}),
+    size: ID.number_({
+      min: 0,
+      max: 100,
+    }),
   }),
   settings: ID.record_({
     accountId: ID.string_({}),

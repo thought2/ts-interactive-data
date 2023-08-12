@@ -149,6 +149,20 @@ instance TsBridge InteractiveData.StringMsg where
     , typeArgs: []
     }
 
+instance TsBridge InteractiveData.NumberState where
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData"
+    , typeName: "NumberState"
+    , typeArgs: []
+    }
+
+instance TsBridge InteractiveData.NumberMsg where
+  tsBridge = TSB.tsBridgeOpaqueType
+    { moduleName: "InteractiveData"
+    , typeName: "NumberMsg"
+    , typeArgs: []
+    }
+
 instance
   ( TsBridge msg
   ) =>

@@ -54,5 +54,6 @@ workspace:
 
   package_set:
     registry: 32.2.0
-  # build_opts:
-  #   # pedantic_packages: true
+  build_opts:
+    pedantic_packages: true
+    persist_warnings: true

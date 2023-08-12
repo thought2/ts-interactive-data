@@ -2,18 +2,27 @@ package:
   dependencies:
     - arrays
     - chameleon-react-basic
+    - chameleon-transformers
     - data-mvc
     - dts
     - effect
     - either
+    - foldable-traversable
+    - foreign
+    - foreign-object
     - integers
     - interactive-data
-    - justifill
     - literals
     - maybe
+    - mvc
+    - newtype
     - nullable
+    - partial
     - prelude
+    - react-basic
     - record
+    - safe-coerce
+    - these
     - ts-bridge
     - tuples
     - untagged-union
