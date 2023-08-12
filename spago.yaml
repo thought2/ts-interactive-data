@@ -10,47 +10,11 @@ workspace:
 
     interactive-data:
       git: "https://github.com/thought2/purescript-interactive-data.all.git"
-      ref: v2.0.0-rc.1
+      ref: 78b5639618f8e9426855e083ccab521595b66f8e
 
     ts-bridge:
       git: "https://github.com/thought2/purescript-ts-bridge.git"
       ref: 065b470affb7ea19cf4fdad288636794531c159c
-      dependencies:
-        [ "aff"
-        , "aff-promise"
-        , "arrays"
-        , "console"
-        , "dts"
-        , "effect"
-        , "either"
-        , "foldable-traversable"
-        , "foreign-object"
-        , "literals"
-        , "maybe"
-        , "newtype"
-        , "node-buffer"
-        , "node-fs"
-        , "node-fs-aff"
-        , "node-path"
-        , "node-process"
-        , "nullable"
-        , "optparse"
-        , "ordered-collections"
-        , "ordered-set"
-        , "partial"
-        , "prelude"
-        , "record"
-        , "safe-coerce"
-        , "strings"
-        , "transformers"
-        , "tuples"
-        , "typelevel-prelude"
-        , "unsafe-coerce"
-        , "untagged-union"
-        , "variant"
-        , "variant-encodings"
-        ]
-
 
   package_set:
     registry: 32.2.0
