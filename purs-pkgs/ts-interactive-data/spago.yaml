@@ -25,7 +25,9 @@ package:
     - these
     - ts-bridge
     - tuples
+    - unsafe-coerce
     - untagged-union
+    - variant
 
   name: ts-interactive-data
   test:

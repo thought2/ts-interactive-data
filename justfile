@@ -10,7 +10,7 @@ test:
     spago test
 
 dev: clean-parcel
-    parcel demo/basic/index.html | node scripts/filter-warnings.js
+    parcel demo/basic/index.html
 
 build-ide:
     spago build --json-errors | node scripts/filter-warnings.js

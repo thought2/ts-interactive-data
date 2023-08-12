@@ -10,6 +10,7 @@ import Data.Traversable (class Foldable, class Traversable, for)
 import Data.Tuple (Tuple(..))
 import Data.Tuple.Nested (type (/\), (/\))
 import Data.Variant (Variant)
+import Data.Variant as V
 import DataMVC.Types (DataUI(..), DataUiInterface(..), DataResult)
 import DataMVC.Types.DataUI (runDataUiFinal)
 import Foreign (Foreign)
@@ -19,10 +20,13 @@ import Foreign.Object as Object
 import InteractiveData (DataUI, IDSurface)
 import InteractiveData.App.WrapData (WrapMsg, WrapState)
 import InteractiveData.DataUIs.Record as R
+import InteractiveData.DataUIs.Variant as Var
 import InteractiveData.Run.Types.HtmlT (IDHtmlT)
 import MVC.Record (ViewResult)
+import MVC.Variant (CaseKey(..))
 import Partial.Unsafe (unsafePartial)
 import Safe.Coerce (coerce)
+import Type.Proxy (Proxy(..))
 import Unsafe.Coerce (unsafeCoerce)
 
 newtype Key = Key String
@@ -46,8 +50,8 @@ type Surface = IDSurface (IDHtmlT ReactHtml)
 type RDataUI = DataUI Surface WrapMsg WrapState
 
 type VariantMsg rcase rmsg = Variant
-  ( childCaseMsg :: Case rcase
-  , changeCase :: Case rmsg
+  ( childCaseMsg :: Case rmsg
+  , changeCase :: Case rcase
   , errorMsg :: String
   )
 
@@ -55,6 +59,10 @@ lookup :: forall v. Key -> Obj v -> v
 lookup (Key key) (Obj obj) =
   unsafePartial $ Object.lookup key obj
     # fromJust
+
+keys :: forall v. Obj v -> Array Key
+keys (Obj obj) =
+  coerce $ Object.keys obj
 
 modify :: forall v. (v -> v) -> Key -> Obj v -> Obj v
 modify f (Key key) (Obj obj) =
@@ -88,7 +96,7 @@ variant_
   :: Key
   -> Obj (RDataUI AnyMsg AnySta AnyA)
   -> RDataUI
-       (VariantMsg (Case Unit) (WrapMsg AnyMsg))
+       (VariantMsg Unit (WrapMsg AnyMsg))
        (Case (WrapState AnySta))
        (Case AnyA)
 variant_ initKey dataUis = DataUI \ctx ->
@@ -102,14 +110,25 @@ variantItf_
   :: forall msg sta a
    . Key
   -> Obj (DataUiInterface Surface msg sta a)
-  -> DataUiInterface Surface (VariantMsg (Case Unit) msg) (Case sta) (Case a)
+  -> DataUiInterface Surface (VariantMsg Unit msg) (Case sta) (Case a)
 variantItf_ initKey dataUiItfs =
   let
-    update :: VariantMsg (Case Unit) msg -> Case sta -> Case sta
-    update = unsafeCoerce 1
+    update :: VariantMsg Unit msg -> Case sta -> Case sta
+    update _ = unsafeCoerce 1
 
     extract :: Case sta -> DataResult (Case a)
-    extract = unsafeCoerce 1
+    extract (Case key val) =
+      let
+        itf :: DataUiInterface Surface msg sta a
+        itf = lookup key dataUiItfs
+
+        extract' :: sta -> DataResult a
+        extract' = itf # un DataUiInterface # _.extract
+
+        result :: DataResult a
+        result = extract' val
+      in
+        map (Case key) result
 
     init :: Maybe (Case a) -> Case sta
     init = case _ of
@@ -134,8 +153,33 @@ variantItf_ initKey dataUiItfs =
         in
           Case key (init' (Just val))
 
-    view :: Case sta -> Surface (VariantMsg (Case Unit) msg)
-    view = unsafeCoerce 1
+    view :: Case sta -> Surface (VariantMsg Unit msg)
+    view (Case key@(Key keyStr) val) =
+      let
+        itf :: DataUiInterface Surface msg sta a
+        itf = lookup key dataUiItfs
+
+        view' :: sta -> Surface msg
+        view' = itf # un DataUiInterface # _.view
+
+        result :: Surface msg
+        result = view' val
+
+        result' :: Surface (VariantMsg Unit msg)
+        result' = mapMsg <$> result
+
+        mapMsg :: msg -> VariantMsg Unit msg
+        mapMsg = Case key
+          >>> V.inj (Proxy :: Proxy "childCaseMsg")
+
+      in
+        Var.mkSurface
+          { viewCase: result'
+          , mkMsg: \(CaseKey keyStr') ->
+              V.inj (Proxy :: Proxy "changeCase") (Case (Key keyStr') unit)
+          , caseKey: CaseKey keyStr
+          , caseKeys: (\(Key keyStr') -> CaseKey keyStr') <$> keys dataUiItfs
+          }
 
   in
     DataUiInterface

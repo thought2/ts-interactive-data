@@ -18,7 +18,7 @@ files.forEach((srcPath) => {
   console.log(`Copying ${srcPathFinal} to ${dstPathFinal}`);
 
   const content = fs.readFileSync(srcPathFinal, "utf8");
-  const newContent = content.replace("../../../../../output/", "../");
+  const newContent = content.replaceAll("../../../../../output/", "../");
 
   fs.writeFileSync(dstPathFinal, newContent, "utf8");
 });
