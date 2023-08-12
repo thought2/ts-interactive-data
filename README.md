@@ -13,6 +13,9 @@ Composable UIs for interactive data.
 
 - [Discaimer ⚠](#discaimer-)
 - [Live Demo](#live-demo)
+- [Features](#features)
+- [Use cases](#use-cases)
+- [Supported types](#supported-types)
 - [Getting Started](#getting-started)
   - [Installation](#installation)
   - [Minimal Example](#minimal-example)
@@ -28,6 +31,37 @@ This library is in early development and the API is not stable yet. Things may n
 
 [thought2.github.io/purescript-interactive-data](https://thought2.github.io/ts-interactive-data/basic)
 
+## Features
+
+- **Framework agnostic**
+  <br>
+  _Can be embedded in any React app
+- **Configurable**
+  <br>
+  _UIs for each data type can be customized_
+- **Extensible**
+  <br>
+  _UIs for any custom data type can be written_
+- **Data validation**
+  <br>
+  _Data is validated on the fly and errors are displayed_
+
+## Use cases
+
+Any part of a web app that need to handle user input of nested structured data. E.g:
+
+- settings panel 
+- back office tools
+- user input forms
+
+## Supported types
+
+The following types are supported out of the box:
+
+- `String`
+- `Number`
+- `Record`
+- Tagged unions
 
 ## Getting Started
 
@@ -35,7 +69,6 @@ This library is in early development and the API is not stable yet. Things may n
 
 ```bash
 npm install ts-interactive-data
-npm install fp-glue
 ```
 
 ### Minimal Example
