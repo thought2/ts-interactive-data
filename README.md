@@ -45,7 +45,6 @@ npm install fp-glue
 ```tsx
 import * as ID from "ts-interactive-data";
 import * as React from "react";
-import { pipe } from "fp-glue";
 
 // 1. Compose a "Data UI" for a specific type
 const sampleDataUi = ID.record_({
