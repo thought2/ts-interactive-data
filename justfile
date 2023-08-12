@@ -19,6 +19,10 @@ format:
     purs-tidy format-in-place 'purs-pkgs/*/src/**/*.purs'
     purs-tidy format-in-place 'purs-pkgs/*/test/**/*.purs'
 
+install-git-hooks:
+    rm -rf .git/hooks
+    ln -s ../git-hooks .git/hooks
+
 # Dist
 
 dist:
