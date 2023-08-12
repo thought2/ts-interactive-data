@@ -10,7 +10,7 @@ workspace:
 
     interactive-data:
       git: "https://github.com/thought2/purescript-interactive-data.all.git"
-      ref: 78b5639618f8e9426855e083ccab521595b66f8e
+      ref: v2.0.0-rc.2
 
     ts-bridge:
       git: "https://github.com/thought2/purescript-ts-bridge.git"
