@@ -83,7 +83,7 @@ import * as React from "react";
 const sampleDataUi = ID.record_({
   user: ID.record_({
     firstName: ID.string({
-      multilineInline: false,
+      multiline: false,
       maxLength: 100,
     }),
     lastName: ID.string({}),
@@ -148,6 +148,10 @@ root.render(<App />);
 *index.html:*
 ```html
 <html>
+  <head>
+    <title>ts-interactive-data Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
   <body>
     <script src="./index.tsx" type="module"></script>
     <div id="app"></div>
