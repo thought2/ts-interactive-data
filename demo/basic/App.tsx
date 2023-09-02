@@ -5,7 +5,7 @@ import * as React from "react";
 const sampleDataUi = ID.record_({
   user: ID.record_({
     firstName: ID.string({
-      multilineInline: false,
+      multiline: false,
       maxLength: 100,
     }),
     lastName: ID.string({}),

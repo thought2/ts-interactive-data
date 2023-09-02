@@ -23,6 +23,9 @@ install-git-hooks:
     rm -rf .git/hooks
     ln -s ../git-hooks .git/hooks
 
+check-ts:
+    tsc
+
 # Dist
 
 dist:
@@ -45,7 +48,7 @@ dist-examples:
     rm -rf .parcel-cache
     rm -rf dist
     for dir in demo/*/; do \
-        echo Building $name; \
+        echo Building $dir; \
         main_dir="ts-interactive-data"; \
         name=$(basename $dir); \
         parcel build --dist-dir dist/$main_dir/$name --public-url /$main_dir/$name/ $dir/index.html ; \
@@ -64,7 +67,7 @@ clean-parcel:
 ci: clean
     just ci_
 
-ci_: format build-strict gen check-git-clean
+ci_: format build-strict gen check-ts dist-examples check-git-clean
 
 check-git-clean:
     [ -z "$(git status --porcelain)" ]

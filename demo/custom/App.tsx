@@ -7,14 +7,11 @@ import * as IDCustom from "./Custom";
 const sampleDataUi = IDCustom.color({});
 
 // 2. Turn "Data UI" into an App interface
-const sampleApp = pipe(
-  sampleDataUi,
-  ID.toApp({
-    name: "Sample",
-    fullscreen: true,
-    initData: { red: 2, green: 0, blue: 0 },
-  })
-);
+const sampleApp = ID.toApp(sampleDataUi, {
+  name: "Sample",
+  fullscreen: true,
+  initData: { red: 2, green: 0, blue: 0 },
+});
 
 // 3. With the `useApp` hook you can integrate the UI into any React app
 export const App = () => {

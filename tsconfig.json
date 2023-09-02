@@ -1,8 +1,8 @@
 {
-  "include": ["ts-src/**/*", "output/**/.*"],
+  "include": ["ts-src/**/*", "output/**/.*", "demo/**/*"],
   "compilerOptions": {
     "declaration": true,
-    "outDir": "./dist",
+    "noEmit": true,
     /* Visit https://aka.ms/tsconfig to read more about this file */
 
     /* Projects */

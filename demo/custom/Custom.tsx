@@ -102,6 +102,7 @@ export const color =
         (state: ColorState) =>
         (viewCtx): DataTree<ColorMsg> => {
           return {
+            text: ID.mkNothing(),
             actions: [],
             children: ID.noTreeChildren(),
             meta: ID.mkNothing(),
@@ -116,7 +117,7 @@ export const color =
 // ----------------------------------------------------------------------------
 
 const rgbToHex = ({ red, green, blue }: Color): string => {
-  const componentToHex = (c) => {
+  const componentToHex = (c: number) => {
     var hex = c.toString(16);
     return hex.length == 1 ? "0" + hex : hex;
   };
