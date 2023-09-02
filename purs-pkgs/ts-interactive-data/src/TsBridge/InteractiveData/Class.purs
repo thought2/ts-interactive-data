@@ -23,8 +23,8 @@ import InteractiveData.App as InteractiveData.App
 import InteractiveData.App.WrapData (WrapMsg, WrapState)
 import InteractiveData.App.WrapData as InteractiveData.App.WrapData
 import InteractiveData.Core as InteractiveData.Core
-import InteractiveData.Run.Types.HtmlT (IDHtmlT)
-import InteractiveData.Run.Types.HtmlT as InteractiveData.Run.Types.HtmlT
+import InteractiveData.Core.Types.IDHtmlT (IDHtmlT)
+import InteractiveData.Core.Types.IDHtmlT as InteractiveData.Core.Types.IDHtmlT
 import Literals.Null (Null)
 import React.Basic as React.Basic
 import TsBridge (class TsBridgeBy, TsBridgeM, TsRecord, TypeVar, tsBridgeBy)
@@ -221,7 +221,7 @@ instance (TsBridge msg) => TsBridge (InteractiveData.Core.DataTreeChildren (IDHt
     , typeArgs: [ "msg" /\ tsBridge (Proxy :: _ msg) ]
     }
 
-instance (TsBridge msg) => TsBridge (InteractiveData.Run.Types.HtmlT.IDHtmlT ReactHtml msg) where
+instance (TsBridge msg) => TsBridge (InteractiveData.Core.Types.IDHtmlT.IDHtmlT ReactHtml msg) where
   tsBridge = TSB.tsBridgeOpaqueType
     { moduleName: "InteractiveData.Core"
     , typeName: "IDHtmlT"

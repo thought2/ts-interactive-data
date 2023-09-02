@@ -23,10 +23,9 @@ import Foreign (Foreign)
 import Foreign.Object (Object)
 import Foreign.Object as Obj
 import Foreign.Object as Object
-import InteractiveData (DataUI, IDSurface)
+import InteractiveData (DataUI, IDSurface, IDHtmlT)
 import InteractiveData.App.WrapData (WrapMsg, WrapState)
 import InteractiveData.DataUIs.Record as R
-import InteractiveData.Run.Types.HtmlT (IDHtmlT)
 import MVC.Record (ViewResult)
 import Partial.Unsafe (unsafePartial)
 import Safe.Coerce (coerce)
@@ -170,7 +169,9 @@ recordItf_ dataUiItfs =
             }
       in
         R.mkSurface
-          { mkSegment: R.mkSegmentStatic }
+          { text: Nothing
+          , mode: R.Keys
+          }
           viewResults
 
   in

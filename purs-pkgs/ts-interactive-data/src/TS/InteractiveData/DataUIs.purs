@@ -7,18 +7,27 @@ module TS.InteractiveData.DataUIs
 import Prelude
 
 import Chameleon.Impl.ReactBasic.Html (ReactHtml)
+import Control.Bind (bindFlipped)
 import DTS as DTS
 import Data.Either (Either)
 import Data.Int as Int
 import Data.Maybe (Maybe(..))
-import InteractiveData (DataUI, IDSurface, NumberMsg, NumberState, StringMsg, StringState)
+import InteractiveData
+  ( DataUI
+  , IDSurface
+  , NumberMsg
+  , NumberState
+  , StringMsg
+  , StringState
+  , WrapMsg
+  , WrapState
+  , IDHtmlT
+  )
 import InteractiveData as ID
-import InteractiveData.App.WrapData (WrapMsg, WrapState)
 import InteractiveData.DataUIs.Number (CfgNumber)
 import InteractiveData.DataUIs.Number as DataUIs.Number
 import InteractiveData.DataUIs.String (CfgString)
 import InteractiveData.DataUIs.String as DataUIs.String
-import InteractiveData.Run.Types.HtmlT (IDHtmlT)
 import Literals.Null as Lit
 import Prim.Boolean (False, True)
 import TS.InteractiveData.Unjustify (unjustify)
@@ -44,8 +53,9 @@ get = TsRec.get (Proxy :: Proxy sym)
 
 type TsCfgString =
   TsRecord
-    ( multilineInline :: ModOpt Boolean
-    , multilineStandalone :: ModOpt Boolean
+    ( text :: ModOpt String
+    , multiline :: ModOpt Boolean
+    , rows :: ModOpt (Number |+| Lit.Null)
     , maxLength :: ModOpt (Number |+| Lit.Null)
     )
 
@@ -53,15 +63,16 @@ stringMapCfg :: TsCfgString -> CfgString StringMsg
 stringMapCfg tsOpt =
   unjustify
     DataUIs.String.defaultCfgString
-    { multilineInline: get @"multilineInline" tsOpt
-    , multilineStandalone: get @"multilineStandalone" tsOpt
+    { text: Just $ get @"text" tsOpt
+    , multiline: get @"multiline" tsOpt
+    , rows: bindFlipped mapInt $ get @"rows" tsOpt
     , actions: Nothing
-    , maxLength: map mapMaxLength $ get @"maxLength" tsOpt
+    , maxLength: map mapInt $ get @"maxLength" tsOpt
     }
   where
 
-  mapMaxLength :: Number |+| Lit.Null -> Maybe Int
-  mapMaxLength val =
+  mapInt :: Number |+| Lit.Null -> Maybe Int
+  mapInt val =
     let
       maybeNumber :: Maybe Number
       maybeNumber = fromOneOf val
@@ -87,6 +98,8 @@ type TsCfgNumber =
     ( min :: ModOpt Number
     , max :: ModOpt Number
     , step :: ModOpt Number
+    , text :: ModOpt String
+    , init :: ModOpt Number
     )
 
 intMapCfg :: TsCfgNumber -> CfgNumber
@@ -96,6 +109,8 @@ intMapCfg tsOpt =
     { min: get @"min" tsOpt
     , max: get @"max" tsOpt
     , step: get @"step" tsOpt
+    , text: Just $ get @"text" tsOpt
+    , init: Just $ get @"init" tsOpt
     }
 
 number

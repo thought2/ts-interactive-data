@@ -11,13 +11,12 @@ import Data.Either (Either)
 import Data.Function.Uncurried (Fn2, mkFn2)
 import Data.Maybe (Maybe(..))
 import Data.These (These)
-import InteractiveData (DataUI, IDSurface)
+import InteractiveData (DataUI, IDSurface, IDHtmlT)
 import InteractiveData as ID
 import InteractiveData.App (AppSelfMsg, AppState)
 import InteractiveData.App.WrapData (WrapMsg, WrapState)
 import InteractiveData.Core (IDOutMsg)
 import InteractiveData.Entry (InteractiveDataApp, ToAppCfg, ToAppOptional, ToAppMandatory, defaultToAppCfg)
-import InteractiveData.Run.Types.HtmlT (IDHtmlT)
 import Prim.Boolean (False, True)
 import Record as Record
 import TS.InteractiveData.Unjustify (unjustify)
@@ -45,6 +44,8 @@ type TsCfgToApp a =
     ( fullscreen :: ModOpt Boolean
     , initData :: ModOpt a
     , name :: Mod String
+    , showMenuOnStart :: ModOpt Boolean
+    , showLogo :: ModOpt Boolean
     )
 
 toAppMapCfg :: forall a. TsCfgToApp a -> ToAppCfg a
@@ -56,6 +57,8 @@ toAppMapCfg tsCfg =
         defaultToAppCfg
         { fullscreen: get @"fullscreen" tsCfg
         , initData: mapInitData $ get @"initData" tsCfg
+        , showMenuOnStart: get @"showMenuOnStart" tsCfg
+        , showLogo: get @"showLogo" tsCfg
         }
 
     mapInitData :: Maybe a -> Maybe (Maybe a)

@@ -22,10 +22,9 @@ import DataMVC.Types.DataUI (runDataUiFinal)
 import Foreign (Foreign)
 import Foreign.Object (Object)
 import Foreign.Object as Object
-import InteractiveData (DataUI, IDSurface)
+import InteractiveData (DataUI, IDSurface, IDHtmlT)
 import InteractiveData.App.WrapData (WrapMsg, WrapState)
 import InteractiveData.DataUIs.Variant as Var
-import InteractiveData.Run.Types.HtmlT (IDHtmlT)
 import MVC.Variant (CaseKey(..))
 import Partial.Unsafe (unsafePartial)
 import Safe.Coerce (coerce)
@@ -178,6 +177,7 @@ variantItf_ initKey dataUiItfs =
 
       in
         Var.mkSurface
+          { text: Nothing }
           { viewCase: result'
           , mkMsg: \(CaseKey keyStr') ->
               V.inj (Proxy :: Proxy "changeCase") (Case (Key keyStr') unit)

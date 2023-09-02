@@ -16,7 +16,7 @@ import DTS as DTS
 import Data.Either (Either(..))
 import Data.Maybe (Maybe(..))
 import InteractiveData.Core (DataTreeChildren(..))
-import InteractiveData.Run.Types.HtmlT (IDHtmlT)
+import InteractiveData (IDHtmlT)
 import TsBridge (TypeVar)
 import TsBridge as TSB
 import TsBridge.InteractiveData.Class (Tok(..))

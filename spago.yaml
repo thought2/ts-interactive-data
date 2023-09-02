@@ -1,23 +1,15 @@
 workspace:
   extra_packages:
-    chameleon-react-basic:
-      git: "https://github.com/thought2/purescript-chameleon-react-basic.git"
-      ref: v0.1.0
-    
-    chameleon-styled:
-      git: "https://github.com/thought2/purescript-chameleon-styled.git"
-      ref: v2.0.0-rc.2
-
     interactive-data:
       git: "https://github.com/thought2/purescript-interactive-data.all.git"
-      ref: v2.0.0-rc.2
+      ref: v4.0.0-rc.1
 
     ts-bridge:
       git: "https://github.com/thought2/purescript-ts-bridge.git"
       ref: ca18c863330a383bf67bce452af75e9c089693ce
 
   package_set:
-    registry: 32.2.0
+    registry: 36.0.0
   build_opts:
     pedantic_packages: true
     persist_warnings: true
